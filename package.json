@@ -4,7 +4,10 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "client": "npm start --prefix client",
+    "server": "nodemon app",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
@@ -16,5 +19,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.7",
     "nodemailer": "^6.4.6"
+  },
+  "devDependencies": {
+    "concurrently": "^5.1.0"
   }
 }
