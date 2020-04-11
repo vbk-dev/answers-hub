@@ -1,7 +1,14 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
-const Registration = () => {
+import {setAlert} from '../../../actions/alert';
+import Alert from '../../layout/Alert';
+
+const ALERT_LOCATION = 'REGISTRATION_FORM';
+
+const Registration = ({setAlert, alertLocation}) => {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -17,7 +24,7 @@ const Registration = () => {
     const onFormSubmithandler = event => {
         event.preventDefault();
         if (password !== confirmPassword){
-            console.log('Error');
+            setAlert('Password did not match', 'danger', ALERT_LOCATION);
         } else {
             console.log(formData);
         }
@@ -41,6 +48,7 @@ const Registration = () => {
                     <hr className='bg-info' />
                 </div>
             </div>
+            { alertLocation === ALERT_LOCATION && <Alert /> }
             <div className="row">
                 <div className="col-lg-6 mx-auto">
                     <form onSubmit={onFormSubmithandler}>
@@ -70,12 +78,12 @@ const Registration = () => {
                             minLength='6' maxLength='32' value={confirmPassword} onChange={onValueChangeHandler} />
                         </div>
                         <div className="form-group">
+                            <input type="submit" value="Register me" className='btn btn-info btn-block'/>
+                        </div>
+                        <div className="form-group">
                             <p>Already have an account? 
                                 <Link to='/login' className='text-info'><strong> Click here to login</strong></Link>
                             </p>
-                        </div>
-                        <div className="form-group">
-                            <input type="submit" value="Register me" className='btn btn-info btn-block'/>
                         </div>
                     </form>
                 </div>
@@ -84,4 +92,13 @@ const Registration = () => {
     )
 }
 
-export default Registration
+Registration.propTypes = {
+    alertLocation: PropTypes.string.isRequired,
+    setAlert: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => ({
+    alertLocation: state.global.alertLocation
+})
+
+export default connect(mapStateToProps, {setAlert})(Registration);
