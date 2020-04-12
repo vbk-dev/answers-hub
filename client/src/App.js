@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useEffect} from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 import Navbar from './components/layout/Navbar';
@@ -9,10 +9,15 @@ import Registration from './components/pages/auth/Registration';
 import PageNotFound from './components/pages/error/PageNotFound';
 
 import {Provider} from 'react-redux';
+import {loadUser} from './actions/auth';
 import store from './store';
 
 
 const App = () => {
+    useEffect(()=>{
+        store.dispatch(loadUser());
+    }, [])
+
     return (
         <Provider store={store}>
             <Fragment>

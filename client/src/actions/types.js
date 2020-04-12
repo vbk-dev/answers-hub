@@ -12,3 +12,5 @@ export const REGISTRATION_FAILED = 'REGISTRATION_FAILED';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILED = 'LOGIN_FAILED';
 export const LOGOUT = 'LOGOUT';
+export const LOAD_USER = 'LOAD_USER';
+export const AUTH_FAILED = 'AUTH_FAILED';

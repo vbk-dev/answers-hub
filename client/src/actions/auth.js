@@ -1,6 +1,7 @@
 import {connection} from '../utils/network-utils';
 
-import {REGISTRATION_SUCCESS, REGISTRATION_FAILED, LOGIN_SUCCESS, LOGIN_FAILED, LOGOUT} from './types';
+import {REGISTRATION_SUCCESS, REGISTRATION_FAILED, LOGIN_SUCCESS, 
+    LOGIN_FAILED, LOGOUT, LOAD_USER, AUTH_FAILED} from './types';
 import {setAlert} from './alert';
 
 export const registerUser = (userDetails, alertLocation) => async dispatch => {
@@ -39,4 +40,18 @@ export const logoutUser = () => dispatch => {
     dispatch({
         type: LOGOUT
     });
+}
+
+export const loadUser = () => async dispatch => {
+    try {
+        const res = await connection.get('/api/auth');
+        dispatch({
+            type: LOAD_USER,
+            payload: res.data.user
+        });
+    } catch (error) {
+        dispatch({
+            type: AUTH_FAILED
+        });
+    }
 }

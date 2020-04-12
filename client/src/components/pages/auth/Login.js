@@ -3,13 +3,12 @@ import {Link, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {setAlert} from '../../../actions/alert';
 import {loginUser} from '../../../actions/auth';
 import Alert from '../../layout/Alert';
 
 const ALERT_LOCATION = 'LOGIN_FORM';
 
-const Login = ({setAlert, alertLocation, loginUser, isAuthenticated}) => {
+const Login = ({ alertLocation, loginUser, isAuthenticated}) => {
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -62,6 +61,11 @@ const Login = ({setAlert, alertLocation, loginUser, isAuthenticated}) => {
                                 minLength='6' maxLength='32' value={password} onChange={onValueChangeHandler} />
                         </div>
                         <div className="form-group">
+                            <p>Forgot your password? 
+                                <Link to='/password-reset' className='text-info'><strong> Reset Password here</strong></Link>
+                            </p>
+                        </div>
+                        <div className="form-group">
                             <input type="submit" value="Login" className='btn btn-info btn-block'/>
                         </div>
                         <div className="form-group">
@@ -78,7 +82,6 @@ const Login = ({setAlert, alertLocation, loginUser, isAuthenticated}) => {
 
 Login.propTypes = {
     alertLocation: PropTypes.string,
-    setAlert: PropTypes.func.isRequired,
     loginUser: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool.isRequired
 };
@@ -88,4 +91,4 @@ const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated
 })
 
-export default connect(mapStateToProps, { setAlert, loginUser })(Login);
+export default connect(mapStateToProps, { loginUser })(Login);

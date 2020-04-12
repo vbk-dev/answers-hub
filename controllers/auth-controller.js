@@ -96,3 +96,16 @@ exports.requestResetPassword = async (req, res, next) => {
         return res.status(500).json({error: 'Something went wrong'});
     }
 }
+
+exports.authenticateUser = async (req, res, next) => {
+    try {
+        const user = await UserModel.findById(req.user_id).select('firstName lastName email joinedOn score authorityLevel');
+        if (!user) {
+            return res.status(400).json({error: 'User Not Found'});
+        }
+        res.json({user});
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({error: 'Something went wrong'});
+    }
+}
