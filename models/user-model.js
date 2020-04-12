@@ -36,7 +36,12 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         required: true,
         default: 0
-    }, 
+    },
+    authorityLevel: {
+        type: Number,
+        required: true,
+        default: 0
+    },
     status: {
         type: Number,
         required: true,

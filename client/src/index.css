@@ -6,3 +6,8 @@ body{
     background-color: #f0f0f0;
     font-family: 'Lato', sans-serif;
 }
+
+.dropdown-item:hover{
+    background-color: #5bc0de;  /* bootstrap info color hex value */
+    color: white;
+}

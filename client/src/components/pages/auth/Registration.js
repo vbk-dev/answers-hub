@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {setAlert} from '../../../actions/alert';
+import {registerUser} from '../../../actions/auth';
 import Alert from '../../layout/Alert';
 
 const ALERT_LOCATION = 'REGISTRATION_FORM';
 
-const Registration = ({setAlert, alertLocation}) => {
+const Registration = ({setAlert, alertLocation, registerUser, isAuthenticated}) => {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -26,8 +27,13 @@ const Registration = ({setAlert, alertLocation}) => {
         if (password !== confirmPassword){
             setAlert('Password did not match', 'danger', ALERT_LOCATION);
         } else {
-            console.log(formData);
+            console.log('Form Data: ', formData);
+            registerUser(formData, ALERT_LOCATION);
         }
+    }
+
+    if (isAuthenticated) {
+        return <Redirect to='/' />
     }
 
     return (
@@ -40,7 +46,7 @@ const Registration = ({setAlert, alertLocation}) => {
             <div className="row">
                 <div className="col-lg-6 mx-auto text-center">
                     <p>Click below to register with google</p>
-                    <a href="/" className='btn btn-info btn-lg' ><i class="fab fa-google-plus-g"></i> Google</a>
+                    <a href="/" className='btn btn-info btn-lg' ><i className="fab fa-google-plus-g"></i> Google</a>
                 </div>
             </div>
             <div className="row">
@@ -74,7 +80,7 @@ const Registration = ({setAlert, alertLocation}) => {
                         </div>
                         <div className="form-group">
                             <label htmlFor="confirmPassword">Confirm Password</label>
-                            <input type="text" className="form-control" name="confirmPassword" placeholder='***********' required
+                            <input type="password" className="form-control" name="confirmPassword" placeholder='***********' required
                             minLength='6' maxLength='32' value={confirmPassword} onChange={onValueChangeHandler} />
                         </div>
                         <div className="form-group">
@@ -93,12 +99,15 @@ const Registration = ({setAlert, alertLocation}) => {
 }
 
 Registration.propTypes = {
-    alertLocation: PropTypes.string.isRequired,
-    setAlert: PropTypes.func.isRequired
+    alertLocation: PropTypes.string,
+    setAlert: PropTypes.func.isRequired,
+    registerUser: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
-    alertLocation: state.global.alertLocation
+    alertLocation: state.global.alertLocation,
+    isAuthenticated: state.auth.isAuthenticated
 })
 
-export default connect(mapStateToProps, {setAlert})(Registration);
+export default connect(mapStateToProps, {setAlert, registerUser})(Registration);

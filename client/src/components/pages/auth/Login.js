@@ -1,7 +1,15 @@
 import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
-const Login = () => {
+import {setAlert} from '../../../actions/alert';
+import {loginUser} from '../../../actions/auth';
+import Alert from '../../layout/Alert';
+
+const ALERT_LOCATION = 'LOGIN_FORM';
+
+const Login = ({setAlert, alertLocation, loginUser, isAuthenticated}) => {
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -14,6 +22,11 @@ const Login = () => {
     const onFormSubmithandler = event => {
         event.preventDefault();
         console.log(formData);
+        loginUser(formData, ALERT_LOCATION)
+    }
+    
+    if (isAuthenticated) {
+        return <Redirect to='/' />
     }
 
     return (
@@ -34,6 +47,7 @@ const Login = () => {
                     <hr className='bg-info' />
                 </div>
             </div>
+            { alertLocation === ALERT_LOCATION && <Alert /> }
             <div className="row">
                 <div className="col-lg-6 mx-auto">
                     <form onSubmit={onFormSubmithandler}>
@@ -48,12 +62,12 @@ const Login = () => {
                                 minLength='6' maxLength='32' value={password} onChange={onValueChangeHandler} />
                         </div>
                         <div className="form-group">
+                            <input type="submit" value="Login" className='btn btn-info btn-block'/>
+                        </div>
+                        <div className="form-group">
                             <p>Don't have an account? 
                                 <Link to='/registration' className='text-info'><strong> Click here to register</strong></Link>
                             </p>
-                        </div>
-                        <div className="form-group">
-                            <input type="submit" value="Login" className='btn btn-info btn-block'/>
                         </div>
                     </form>
                 </div>
@@ -62,4 +76,16 @@ const Login = () => {
     )
 }
 
-export default Login
+Login.propTypes = {
+    alertLocation: PropTypes.string,
+    setAlert: PropTypes.func.isRequired,
+    loginUser: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired
+};
+
+const mapStateToProps = state => ({
+    alertLocation: state.global.alertLocation,
+    isAuthenticated: state.auth.isAuthenticated
+})
+
+export default connect(mapStateToProps, { setAlert, loginUser })(Login);

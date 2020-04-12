@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const keys = require('./config/keys');
 const authRoutes = require('./routes/auth-routes');
@@ -7,7 +8,9 @@ const questionsRoutes = require('./routes/question-routes');
 
 const app = express();
 
+app.use(cors());
 app.use(express.json({extended: false}));
+
 
 app.use('/api/auth', authRoutes);
 app.use('/api/question', questionsRoutes);
