@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 
 import {logoutUser} from '../../actions/auth';
 
-const Navbar = ({logoutUser, isAuthenticated}) => {
+const Navbar = ({logoutUser, isAuthenticated, name, isLoading}) => {
 
     const logoutHander = event => {
         logoutUser();
@@ -23,14 +23,14 @@ const Navbar = ({logoutUser, isAuthenticated}) => {
 
     const authLinks = (
         <Fragment>
-            <li className="nav-item dropdown">
-                <Link className="nav-link dropdown-toggle" id="profileDropdown" role="button" data-toggle="dropdown" 
+            <li className="nav-item dropdown active">
+                <a className="nav-link dropdown-toggle" href='#!' id="profileDropdown" role="button" data-toggle="dropdown" 
                     aria-haspopup="true" aria-expanded="false">
-                    <i className="fas fa-user"></i>{' '}Profile
-                </Link>
+                    {name}
+                </a>
                 <div className="dropdown-menu" aria-labelledby="profileDropdown">
-                    <a className="dropdown-item" href="!#">My Profile</a>
-                    <Link className="dropdown-item" onClick={logoutHander}>Logout</Link>
+                    <a className="dropdown-item" href='#!' onClick={logoutHander}>Logout</a>
+                    {/* <Link className="dropdown-item" onClick={logoutHander}>Logout</Link> */}
                 </div>
             </li>
         </Fragment>
@@ -51,7 +51,7 @@ const Navbar = ({logoutUser, isAuthenticated}) => {
                     <li className="nav-item active">
                         <Link className="nav-link" to="/">Home</Link>
                     </li>
-                    { isAuthenticated ? authLinks: unauthLinks }
+                    { isLoading ? null : isAuthenticated ? authLinks : unauthLinks }
                 </ul>
             </div>
         </nav>
@@ -59,7 +59,9 @@ const Navbar = ({logoutUser, isAuthenticated}) => {
 }
 
 const mapStateToProps = state => ({
-    isAuthenticated: state.auth.isAuthenticated
+    isAuthenticated: state.auth.isAuthenticated,
+    isLoading: state.auth.isLoading,
+    name: state.auth.user ? state.auth.user.firstName : ''
 })
 
 export default connect(mapStateToProps, {logoutUser})(Navbar);

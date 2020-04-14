@@ -11,3 +11,11 @@ body{
     background-color: #5bc0de;  /* bootstrap info color hex value */
     color: white;
 }
+
+.card {
+    border-radius: 0.5rem;
+}
+
+.ck-content {
+    min-height: 13rem;
+}

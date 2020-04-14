@@ -6,16 +6,16 @@ exports.postQuestion = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()){
         return res.status(400).json({
-            error: errors.array()
+            error: errors.array()[0].msg
         });
     }
     try {
         let question = new QuestionModel(req.body);
-        question.tags = req.body.tags.replace(/,/g, ' ');
+        question.tags = formatTags(req.body.tags);
         question.postedBy = req.user_id;
         await question.save();
 
-        res.json({question});
+        res.json({result: true});
     } catch (error) {
         console.error(error);
         return res.status(500).json({error: 'Something went wrong'});
@@ -66,7 +66,7 @@ exports.deleteQuestion = async (req, res, next) => {
 
 exports.fetchAllQuestions = async (req, res, next) => {
     try {
-        const questions = await QuestionModel.find().select('title postedOn').sort({postedOn: -1});
+        const questions = await QuestionModel.find().select('title postedOn tags').sort({postedOn: -1}).populate('postedBy', 'firstName lastName -_id');
         res.json({questions});
     } catch (error) {
         console.error(error);
@@ -82,4 +82,16 @@ exports.fetchQuestions = async (req, res, next) => {
         console.error(error);
         return res.status(500).json({error: 'Something went wrong'});
     }
+}
+
+
+const formatTags = str => {
+    tag = '';
+    if (str.trim() === '' || str === null)
+        return null;
+    const arr = str.split(',');
+    for (let item of arr){
+        tag += (item.trim() + ' ')
+    }
+    return tag.trim();
 }

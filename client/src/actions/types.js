@@ -8,9 +8,12 @@ export const REMOVE_ALERT_LOCATION = 'REMOVE_ALERT_LOCATION';
 
 // types consants for auth state
 export const REGISTRATION_SUCCESS = 'REGISTRATION_SUCCESS';
-export const REGISTRATION_FAILED = 'REGISTRATION_FAILED';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGIN_FAILED = 'LOGIN_FAILED';
 export const LOGOUT = 'LOGOUT';
 export const LOAD_USER = 'LOAD_USER';
 export const AUTH_FAILED = 'AUTH_FAILED';
+
+// types constants form questions state
+export const FETCH_ALL_QUESTIONS = 'FETCH_ALL_QUESTIONS';
+export const POST_QUESTION = 'POST_QUESTION';
+export const POST_QUESTION_ERROR = 'POST_QUESTION_ERROR';

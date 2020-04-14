@@ -38,7 +38,7 @@ const Login = ({ alertLocation, loginUser, isAuthenticated}) => {
             <div className="row">
                 <div className="col-lg-6 mx-auto text-center">
                     <p>Click below to Login with google</p>
-                    <a href="/" className='btn btn-info btn-lg' ><i class="fab fa-google-plus-g"></i> Google</a>
+                    <a href="/" className='btn btn-info btn-lg' ><i className="fab fa-google-plus-g"></i> Google</a>
                 </div>
             </div>
             <div className="row">

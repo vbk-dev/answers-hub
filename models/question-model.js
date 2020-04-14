@@ -7,13 +7,14 @@ const QuestionSchema = new mongoose.Schema({
         minlength: 3,
         maxlength: 128
     },
-    body: {
+    description: {
         type: String,
         required: true
     },
     tags: {
         type: String,
-        required: false
+        required: false,
+        maxlength: 150
     },
     votes: [{
         type: mongoose.Types.ObjectId,

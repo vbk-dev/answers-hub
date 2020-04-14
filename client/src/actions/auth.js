@@ -1,7 +1,7 @@
 import {connection} from '../utils/network-utils';
 
-import {REGISTRATION_SUCCESS, REGISTRATION_FAILED, LOGIN_SUCCESS, 
-    LOGIN_FAILED, LOGOUT, LOAD_USER, AUTH_FAILED} from './types';
+import {REGISTRATION_SUCCESS, LOGIN_SUCCESS, 
+    LOGOUT, LOAD_USER, AUTH_FAILED} from './types';
 import {setAlert} from './alert';
 
 export const registerUser = (userDetails, alertLocation) => async dispatch => {
@@ -12,10 +12,11 @@ export const registerUser = (userDetails, alertLocation) => async dispatch => {
             type: REGISTRATION_SUCCESS,
             payload: res.data.token
         });
+        // dispatch(loadUser());
     } catch (error) {
         dispatch(setAlert(error.response.data.error, 'danger', alertLocation));
         dispatch({
-            type: REGISTRATION_FAILED
+            type: AUTH_FAILED
         });
     }
 }
@@ -28,10 +29,11 @@ export const loginUser = (userDetails, alertLocation) => async dispatch => {
             type: LOGIN_SUCCESS,
             payload: res.data.token
         });
+        // dispatch(loadUser());
     } catch (error) {
         dispatch(setAlert(error.response.data.error, 'danger', alertLocation));
         dispatch({
-            type: LOGIN_FAILED
+            type: AUTH_FAILED
         });
     }
 }
