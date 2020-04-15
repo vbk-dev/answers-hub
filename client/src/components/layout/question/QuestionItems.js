@@ -8,7 +8,7 @@ const QuestionItems = ({ questionDetails }) => {
     return (
         <div className="card my-2">
             <div className="card-body">
-                <h4><Link to='!#'>{questionDetails.title}</Link></h4>
+                <h4><Link to={`/question/${questionDetails._id}/${questionDetails.dashedTitle}`}>{questionDetails.title}</Link></h4>
                 <p>
                     Asked On: {Moment(questionDetails.postedOn).format('Do MMM YYYY')} 
                 </p>

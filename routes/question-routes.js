@@ -6,7 +6,7 @@ const authorizeUser = require('../middleware/auth-user');
 
 router.get('/all', questionController.fetchAllQuestions);
 
-router.get('/:question_id', questionController.fetchQuestions);
+router.get('/:question_id/:question_title', questionController.fetchQuestions);
 
 router.post('/', authorizeUser, questionValidation.questionValidator, questionController.postQuestion);
 

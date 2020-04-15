@@ -19,3 +19,13 @@ body{
 .ck-content {
     min-height: 13rem;
 }
+
+.ques-container{
+    background-color: white;
+    border-radius: 0.5rem;
+}
+
+.user-card{
+    border-radius: 0.5rem;
+    width: 15rem;
+}

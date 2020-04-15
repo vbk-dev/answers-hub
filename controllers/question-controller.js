@@ -1,6 +1,8 @@
 const {validationResult} = require('express-validator');
+const lodash = require('lodash');
 
 const QuestionModel = require('../models/question-model');
+const {formatTags, questionObjectFormatter} = require('../utils/question-utils');
 
 exports.postQuestion = async (req, res, next) => {
     const errors = validationResult(req);
@@ -67,7 +69,7 @@ exports.deleteQuestion = async (req, res, next) => {
 exports.fetchAllQuestions = async (req, res, next) => {
     try {
         const questions = await QuestionModel.find().select('title postedOn tags').sort({postedOn: -1}).populate('postedBy', 'firstName lastName -_id');
-        res.json({questions});
+        res.json({questions: questionObjectFormatter(questions)});
     } catch (error) {
         console.error(error);
         return res.status(500).json({error: 'Something went wrong'});
@@ -76,22 +78,14 @@ exports.fetchAllQuestions = async (req, res, next) => {
 
 exports.fetchQuestions = async (req, res, next) => {
     try {
-        const question = await QuestionModel.findById(req.params.question_id).populate('postedBy');
-        res.json({question});
+        const question = await QuestionModel.findById(req.params.question_id).select('-__v').populate('postedBy', 'score firstName lastName id');
+        if (question && req.params.question_title === lodash.kebabCase(question.title)){
+            res.json({question});
+        } else {
+            res.status(200).json({error: 'Question not found'});
+        }
     } catch (error) {
         console.error(error);
         return res.status(500).json({error: 'Something went wrong'});
     }
-}
-
-
-const formatTags = str => {
-    tag = '';
-    if (str.trim() === '' || str === null)
-        return null;
-    const arr = str.split(',');
-    for (let item of arr){
-        tag += (item.trim() + ' ')
-    }
-    return tag.trim();
 }

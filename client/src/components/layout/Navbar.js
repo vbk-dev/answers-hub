@@ -30,7 +30,8 @@ const Navbar = ({logoutUser, isAuthenticated, name, isLoading}) => {
                 </a>
                 <div className="dropdown-menu" aria-labelledby="profileDropdown">
                     <Link className="dropdown-item" to='/user/profile'>Profile</Link>
-                    <a className="dropdown-item" href='#!' onClick={logoutHander}>Logout</a>
+                    <button className="dropdown-item" onClick={logoutHander}>Logout</button>
+                    {/* <a className="dropdown-item" href='/' >Logout</a> */}
                 </div>
             </li>
         </Fragment>

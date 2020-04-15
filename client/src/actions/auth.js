@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-// import {connection} from '../utils/network-utils';
-
 import {REGISTRATION_SUCCESS, LOGIN_SUCCESS, 
     LOGOUT, LOAD_USER, AUTH_FAILED} from './types';
 import {setAlert} from './alert';

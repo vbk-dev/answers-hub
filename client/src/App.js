@@ -7,6 +7,7 @@ import Landing from './components/pages/public/Landing';
 import Login from './components/pages/auth/Login';
 import Registration from './components/pages/auth/Registration';
 import AskQuestion from './components/pages/private/AskQuestion';
+import Question from './components/pages/public/Question';
 import PageNotFound from './components/pages/error/PageNotFound';
 
 import {Provider} from 'react-redux';
@@ -35,6 +36,7 @@ const App = () => {
                         <Route path='/' component={Landing} exact />
                         <Route path='/registration' component={Registration} exact />
                         <Route path='/login' component={Login} exact />
+                        <Route path='/question/:id/:title' component={Question} exact />
                         <PrivateRoute path='/ask-question' component={AskQuestion} exact />
                         <Route component={PageNotFound} />
                     </Switch>

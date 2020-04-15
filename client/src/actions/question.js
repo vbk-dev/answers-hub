@@ -1,7 +1,6 @@
-// import {connection} from '../utils/network-utils';
 import axios from 'axios';
 
-import {POST_QUESTION, FETCH_ALL_QUESTIONS} from './types';
+import {POST_QUESTION, FETCH_ALL_QUESTIONS, FETCH_QUESTION, FETCH_QUESTION_ERROR} from './types';
 import {setAlert} from './alert';
 
 export const postQuestion = (questionDetails, alertLocation) => async dispatch => {
@@ -36,5 +35,20 @@ export const fetchAllQuestions = () => async dispatch => {
         // dispatch({
         //     type: POST_QUESTION_ERROR
         // });
+    }
+}
+
+export const fetchQuestionDetails = (id, dashedTitle) => async dispatch => {
+    try {
+        const res = await axios.get(`/api/question/${id}/${dashedTitle}`);
+        console.log('Server Response: ', res.data);
+        dispatch({
+            type: FETCH_QUESTION,
+            payload: res.data.question
+        })
+    } catch (error) {
+        dispatch({
+            type: FETCH_QUESTION_ERROR
+        });       
     }
 }
