@@ -1,12 +1,18 @@
-import {connection} from '../utils/network-utils';
+// import {connection} from '../utils/network-utils';
+import axios from 'axios';
 
-import {POST_QUESTION, POST_QUESTION_ERROR, FETCH_ALL_QUESTIONS} from './types';
+import {POST_QUESTION, FETCH_ALL_QUESTIONS} from './types';
 import {setAlert} from './alert';
 
 export const postQuestion = (questionDetails, alertLocation) => async dispatch => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
     const body = JSON.stringify(questionDetails);
     try {
-        await connection.post('/api/question/', body);
+        await axios.post('/api/question/', body, config);
         dispatch({
             type: POST_QUESTION
         });
@@ -20,7 +26,7 @@ export const postQuestion = (questionDetails, alertLocation) => async dispatch =
 
 export const fetchAllQuestions = () => async dispatch => {
     try {
-        const res = await connection.get('/api/question/all');
+        const res = await axios.get('/api/question/all');
         dispatch({
             type: FETCH_ALL_QUESTIONS,
             payload: res.data.questions

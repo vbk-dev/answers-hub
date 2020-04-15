@@ -14,6 +14,11 @@ import {loadUser} from './actions/auth';
 import store from './store';
 
 import PrivateRoute from './components/utils/PrivateRoute';
+import setAuthToken from './utils/set-header-token';
+
+if (localStorage.token){
+    setAuthToken(localStorage.token);
+}
 
 const App = () => {
 

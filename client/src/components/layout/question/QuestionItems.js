@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import Moment from 'moment';
 import {Link} from 'react-router-dom';
 
@@ -17,8 +17,8 @@ const QuestionItems = ({ questionDetails }) => {
     );
 }
 
-QuestionItems.propTypes = {
+// QuestionItems.propTypes = {
     
-};
+// };
 
 export default QuestionItems;

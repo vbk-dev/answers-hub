@@ -24,13 +24,13 @@ const Navbar = ({logoutUser, isAuthenticated, name, isLoading}) => {
     const authLinks = (
         <Fragment>
             <li className="nav-item dropdown active">
-                <a className="nav-link dropdown-toggle" href='#!' id="profileDropdown" role="button" data-toggle="dropdown" 
+                <a className="nav-link dropdown-toggle" href='/' id="profileDropdown" role="button" data-toggle="dropdown" 
                     aria-haspopup="true" aria-expanded="false">
                     {name}
                 </a>
                 <div className="dropdown-menu" aria-labelledby="profileDropdown">
+                    <Link className="dropdown-item" to='/user/profile'>Profile</Link>
                     <a className="dropdown-item" href='#!' onClick={logoutHander}>Logout</a>
-                    {/* <Link className="dropdown-item" onClick={logoutHander}>Logout</Link> */}
                 </div>
             </li>
         </Fragment>
