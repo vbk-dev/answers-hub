@@ -1,14 +1,15 @@
 const lodash = require('lodash');
 
 exports.formatTags = str => {
-    tag = '';
+    let tag = '';
     if (str.trim() === '' || str === null)
         return null;
     const arr = str.split(',');
     for (let item of arr){
-        tag += (item.trim() + ' ')
+        tag += (item.trim() + ' , ')
     }
-    return tag.trim();
+    tag = tag.slice(0, tag.length-2);
+    return tag;
 }
 
 exports.questionObjectFormatter = questionsList => {

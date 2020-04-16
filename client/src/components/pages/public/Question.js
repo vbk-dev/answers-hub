@@ -4,8 +4,11 @@ import {connect} from 'react-redux';
 
 import QuestionDetails from '../../layout/question/QuestionDetails';
 import {fetchQuestionDetails} from '../../../actions/question';
+import Alert from '../../layout/Alert';
 
-const Question = ({fetchQuestionDetails, match}) => {
+const ALERT_LOCATION = 'QUESTION_DISPLAY';
+
+const Question = ({fetchQuestionDetails, match, alertLocation}) => {
 
     useEffect(() => {
         fetchQuestionDetails(match.params.id, match.params.title);
@@ -14,8 +17,9 @@ const Question = ({fetchQuestionDetails, match}) => {
 
     return (
         <div className="container ques-container mt-4 px-5">
+            {alertLocation === ALERT_LOCATION && <Alert />}
             <div className="question">
-                <QuestionDetails />
+                <QuestionDetails dashTitle={match.params.title} id={match.params.id} />
             </div>
         </div>
     );
@@ -25,4 +29,8 @@ Question.propTypes = {
     fetchQuestionDetails: PropTypes.func.isRequired
 };
 
-export default connect(null, { fetchQuestionDetails })(Question);
+const mapStateToProps = state => ({
+    alertLocation: state.global.alertLocation
+});
+
+export default connect(mapStateToProps, { fetchQuestionDetails })(Question);

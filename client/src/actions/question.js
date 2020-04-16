@@ -1,9 +1,10 @@
 import axios from 'axios';
 
+
 import {POST_QUESTION, FETCH_ALL_QUESTIONS, FETCH_QUESTION, FETCH_QUESTION_ERROR} from './types';
 import {setAlert} from './alert';
 
-export const postQuestion = (questionDetails, alertLocation) => async dispatch => {
+export const postQuestion = (questionDetails, alertLoc, history) => async dispatch => {
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -15,11 +16,30 @@ export const postQuestion = (questionDetails, alertLocation) => async dispatch =
         dispatch({
             type: POST_QUESTION
         });
+        history.push('/');
         dispatch(setAlert('Your question posted Successfully', 'success', 'INDEX'));
-        return true;
     } catch (error) {
-        dispatch(setAlert(error.response.data.error, 'danger', alertLocation));        
-        return false;
+        dispatch(setAlert(error.response.data.error, 'danger', alertLoc));
+    }
+}
+
+export const updateQuestion = (questionDetails, questionId, alertLoc, history) => async dispatch => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    const body = JSON.stringify(questionDetails);
+    try {
+        const res = await axios.put(`/api/question/${questionId}`, body, config);
+        dispatch({
+            type: FETCH_QUESTION,
+            payload: res.data.question
+        });
+        history.push('/');
+        dispatch(setAlert('Question Updated Successfully', 'success', 'INDEX'));
+    } catch (error) {
+        dispatch(setAlert(error.response.data.error, 'danger', alertLoc));
     }
 }
 
@@ -41,7 +61,6 @@ export const fetchAllQuestions = () => async dispatch => {
 export const fetchQuestionDetails = (id, dashedTitle) => async dispatch => {
     try {
         const res = await axios.get(`/api/question/${id}/${dashedTitle}`);
-        console.log('Server Response: ', res.data);
         dispatch({
             type: FETCH_QUESTION,
             payload: res.data.question
@@ -49,6 +68,7 @@ export const fetchQuestionDetails = (id, dashedTitle) => async dispatch => {
     } catch (error) {
         dispatch({
             type: FETCH_QUESTION_ERROR
-        });       
+        });
+        console.log('Error: ', error.response.data);
     }
 }

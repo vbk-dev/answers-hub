@@ -35,11 +35,11 @@ exports.updateQuestion = async (req, res, next) => {
         const question = await QuestionModel.findById(req.params.question_id);
         if (!question) return res.status(404).json({error: 'Question not found'});
         if (question.postedBy.toString() !== req.user_id.toString()) return res.status(401).json({error: 'User not authorized'});
-        
-        const {title, body, tags} = req.body;
+
+        const {title, description, tags} = req.body;
         question.title = title;
-        question.body = body;
-        question.tags = tags.replace(/,/g, ' ');
+        question.description = description;
+        question.tags = formatTags(tags);
 
         await question.save();
 
