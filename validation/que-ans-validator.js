@@ -6,3 +6,7 @@ exports.questionValidator = [
     check('description', 'Description is required').not().isEmpty().trim(),
     check('tags', 'Tags must be less than 128 character').isLength({max: 128}).trim()
 ];
+
+exports.answerValidator = [
+    check('answer', 'Title is required').not().isEmpty()
+];

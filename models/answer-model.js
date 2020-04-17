@@ -6,32 +6,14 @@ const AnswerSchema = new mongoose.Schema({
         required: true,
         ref: 'questions'
     },
-    body: {
+    answer: {
         type: String,
         required: true
     },
-    votes: [{
+    upLikes: [{
         type: mongoose.Types.ObjectId,
         require: false,
         ref: 'users'
-    }],
-    comments: [{
-        comment: {
-            type: String,
-            required: true,
-            minlength: 3,
-            maxlength: 128
-        },
-        postedBy: {
-            type: mongoose.Types.ObjectId,
-            required: true,
-            ref: 'users'
-        },
-        postedOn: {
-            type: Date,
-            required: true,
-            default: Date.now
-        }
     }],
     isVerified: {
         type: Boolean,
