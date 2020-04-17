@@ -16,7 +16,7 @@ const Question = ({fetchQuestionDetails, match, alertLocation}) => {
     }, []);
 
     return (
-        <div className="container ques-container mt-4 px-5">
+        <div className="container ques-container my-4 px-5">
             {alertLocation === ALERT_LOCATION && <Alert />}
             <div className="question">
                 <QuestionDetails dashTitle={match.params.title} id={match.params.id} />

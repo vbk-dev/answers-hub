@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-import {POST_QUESTION, FETCH_ALL_QUESTIONS, FETCH_QUESTION, FETCH_QUESTION_ERROR} from './types';
+import {POST_QUESTION, FETCH_ALL_QUESTIONS, FETCH_QUESTION, FETCH_QUESTION_ERROR } from './types';
 import {setAlert} from './alert';
 
 export const postQuestion = (questionDetails, alertLoc, history) => async dispatch => {
@@ -51,7 +51,7 @@ export const fetchAllQuestions = () => async dispatch => {
             payload: res.data.questions
         })
     } catch (error) {
-        // dispatch(setAlert(error.response.data.error, 'danger', alertLocation));
+        dispatch(setAlert(error.response.data.error + ' Please Refresh Page', 'danger', 'INDEX'));
         // dispatch({
         //     type: POST_QUESTION_ERROR
         // });
@@ -70,5 +70,15 @@ export const fetchQuestionDetails = (id, dashedTitle) => async dispatch => {
             type: FETCH_QUESTION_ERROR
         });
         console.log('Error: ', error.response.data);
+    }
+}
+
+export const deleteQuestion = (id, alertLoc, history) => async dispatch => {
+    try {
+        await axios.delete(`/api/question/${id}`);
+        dispatch(setAlert('Question Deleted Successfully', 'success', 'INDEX'));
+        history.push('/');
+    } catch (error) {
+        dispatch(setAlert(error.response.data.error + ' Please Refresh Page', 'danger', alertLoc));
     }
 }
