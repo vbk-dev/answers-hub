@@ -19,3 +19,8 @@ export const POST_QUESTION = 'POST_QUESTION';
 export const POST_QUESTION_ERROR = 'POST_QUESTION_ERROR';
 export const FETCH_QUESTION = 'FETCH_QUESTION';
 export const FETCH_QUESTION_ERROR = 'FETCH_QUESTION_ERROR';
+
+// types constants form answer state
+export const FETCH_ALL_ANSWERS = 'FETCH_ALL_ANSWERS';
+export const FETCH_ANSWERS_ERROR = 'FETCH_ANSWERS_ERROR';
+export const POST_ANSWER = 'POST_ANSWER';

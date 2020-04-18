@@ -75,7 +75,7 @@ export const fetchQuestionDetails = (id, dashedTitle) => async dispatch => {
 
 export const deleteQuestion = (id, alertLoc, history) => async dispatch => {
     try {
-        await axios.delete(`/api/question/${id}`);
+            await axios.delete(`/api/question/${id}`);
         dispatch(setAlert('Question Deleted Successfully', 'success', 'INDEX'));
         history.push('/');
     } catch (error) {

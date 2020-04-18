@@ -1,4 +1,4 @@
-import React, {useState, Fragment, useEffect} from 'react';
+import React, {useState, Fragment } from 'react';
 import {connect} from 'react-redux'; 
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -16,10 +16,6 @@ const QuestionForm = ({setAlert, alertLocation, type, question, authUser, dashed
         description: type === 'EDIT' ? question.description: '',
         tags: type === 'EDIT' ? question.tags: ''
     });
-
-    useEffect(()=>{
-        console.log('question_user_id: ', );
-    },[])
 
     const { title, description, tags } = formData;
 

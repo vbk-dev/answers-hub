@@ -16,7 +16,7 @@ exports.postAnswer = async (req, res, next) => {
     });
     answer = await answer.save();
 
-    const answers = await AnswerModel.find({ question_id: req.params.question_id }).sort({postedOn: -1}).populate('postedBy', 'firstName lastName -_id');
+    const answers = await AnswerModel.find({ question_id: req.params.question_id }).sort({postedOn: -1}).populate('postedBy', 'firstName score lastName');
     
     res.json({
         answers
@@ -41,7 +41,8 @@ exports.deleteAnswer = async (req, res, next) => {
 
 exports.fetchAnswers = async (req, res, next) => {
     try {
-        const answers = await AnswerModel.find().select('-question_id -__v').sort({postedOn: -1}).populate('postedBy', 'firstName lastName -_id');
+        const answers = await AnswerModel.find({question_id: req.params.question_id}).select('-question_id -__v')
+            .sort({postedOn: -1}).populate('postedBy', 'firstName score lastName');
         res.json({answers});
     } catch (error) {
         console.error(error);
