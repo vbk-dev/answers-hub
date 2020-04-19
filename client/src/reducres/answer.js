@@ -1,4 +1,4 @@
-import { FETCH_ALL_ANSWERS, FETCH_ANSWERS_ERROR, POST_ANSWER } from '../actions/types';
+import { FETCH_ALL_ANSWERS, FETCH_ANSWERS_ERROR, POST_ANSWER, DELETE_ANSWER, UPDATE_ANSWER } from '../actions/types';
 
 const initialState = {
     answerList: [],
@@ -10,6 +10,8 @@ export default function(state=initialState, action) {
     switch(type){
         case FETCH_ALL_ANSWERS:
         case POST_ANSWER:
+        case DELETE_ANSWER:
+        case UPDATE_ANSWER:
             return { ...state, isLoading: false, answerList: payload };
         case FETCH_ANSWERS_ERROR:
             return { ...state, isLoading: false, answerList: [] };

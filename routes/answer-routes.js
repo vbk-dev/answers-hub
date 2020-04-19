@@ -6,7 +6,7 @@ const authenticator = require('../middleware/auth-user');
 
 router.post('/post-answer/:question_id', authenticator, answerValidator, answerController.postAnswer);
 
-router.delete('/:answer_id', authenticator, answerController.deleteAnswer)
+router.delete('/:answer_id/:question_id', authenticator, answerController.deleteAnswer)
 
 router.get('/fetch/:question_id', answerController.fetchAnswers)
 

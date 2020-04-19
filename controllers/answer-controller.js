@@ -29,10 +29,10 @@ exports.deleteAnswer = async (req, res, next) => {
         const answer = await AnswerModel.findById(answerId).select('postedBy');
         if (!answer) return res.status(404).json({error: 'Answer not found'});
         if (answer.postedBy.toString() !== req.user_id.toString()) return res.status(401).json({error: 'User not authorized'});
-
         await AnswerModel.findByIdAndRemove(answerId);
+        const answers = await AnswerModel.find({ question_id: req.params.question_id }).sort({postedOn: -1}).populate('postedBy', 'firstName score lastName');
 
-        res.json({result: 'Answer deleted'});
+        res.json({answers});
     } catch (error) {
         console.error(error);
         return res.status(500).json({error: 'Something went wrong'});
@@ -65,7 +65,7 @@ exports.updateAnswer = async (req, res, next) => {
         answer.answer = req.body.answer;
         await answer.save();
 
-        const answers = await AnswerModel.find({ question_id: req.params.question_id }).sort({postedOn: -1}).populate('postedBy', 'firstName lastName -_id');
+        const answers = await AnswerModel.find({ question_id: req.params.question_id }).sort({postedOn: -1}).populate('postedBy', 'firstName score lastName -_id');
 
         res.json({answers});
     } catch (error) {

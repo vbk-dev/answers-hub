@@ -3,22 +3,22 @@ import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
- 
+
 import {setAlert} from '../../../actions/alert';
-import {postAnswer} from '../../../actions/answer';
+import {postAnswer, updateAnswer} from '../../../actions/answer';
 import Alert from '../Alert';
 
 const ALERT_LOCATION = "ANSWER_FORM";
 
-const AnswerForm = ({isAuthenticated, questionId, alertLocation, setAlert, postAnswer}) => {
-    const [answer, setAnswer] = useState('');
+const AnswerForm = ({isAuthenticated, questionId, updateAnswer, alertLocation, setAlert, postAnswer, ansDetails, type, setIsEditing}) => {
+    const [answer, setAnswer] = useState( type === 'EDIT' ? ansDetails.answer : '' );
 
     const editorConfiguration = {
         toolbar: [ 'heading', 'bold', 'italic', 'link', 'bulletedlist', 'numberedlist', 
             'indent', 'outdent', 'undo', 'redo' ]
     };
 
-    const onFormSubmitHandler = event => {
+    const onPostSubmitHandler = event => {
         event.preventDefault();
         if (answer.trim() === ''){
             setAlert('Answer is required', 'danger', ALERT_LOCATION);
@@ -27,17 +27,34 @@ const AnswerForm = ({isAuthenticated, questionId, alertLocation, setAlert, postA
         }
     }
 
+    const onUpdateSubmitHandler = event => {
+        event.preventDefault();
+        if (answer.trim() === ''){
+            setAlert('Answer is required', 'danger', ALERT_LOCATION);
+        } else {
+            updateAnswer(answer, questionId, ansDetails._id, ansDetails._id + '-ANSWER_CARD');
+            setIsEditing(false);
+        }
+    }
+
     return (
         <Fragment>
             {alertLocation === ALERT_LOCATION && <Alert />}
             { isAuthenticated ? (
-                <form onSubmit={onFormSubmitHandler}>
+                <form onSubmit={ type === 'EDIT' ? onUpdateSubmitHandler : onPostSubmitHandler}>
                     <div className="form-group">
                         <CKEditor  editor={ ClassicEditor } config={editorConfiguration} data={answer}
                             onChange={(event, editor) => setAnswer(editor.getData())} />
                     </div>
                     <div className="form-group">
-                        <input type="submit" value="Post Answer" className='btn btn-info' />
+                        {type === 'EDIT' ? (
+                            <Fragment>
+                                <input type="submit" value="update Answer" className='btn btn-success mx-2' />
+                                <input type="button" value="Cancel Update" className='btn btn-danger mx-2' onClick={ event => { setIsEditing(false) } } />
+                            </Fragment>
+                        ) : (
+                            <input type="submit" value="Post Answer" className='btn btn-info' />
+                        )}
                     </div>
                 </form>
             ) : (
@@ -53,4 +70,4 @@ const mapStateToProps = state => ({
     alertLocation: state.global.alertLocation
 });
 
-export default connect(mapStateToProps, {setAlert, postAnswer})(AnswerForm);
+export default connect(mapStateToProps, {setAlert, postAnswer, updateAnswer})(AnswerForm);
