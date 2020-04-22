@@ -14,7 +14,7 @@ export const LOAD_USER = 'LOAD_USER';
 export const AUTH_FAILED = 'AUTH_FAILED';
 
 // types constants form questions state
-export const FETCH_ALL_QUESTIONS = 'FETCH_ALL_QUESTIONS';
+export const FETCH_QUESTIONS_LIST = 'FETCH_QUESTIONS_LIST';
 export const POST_QUESTION = 'POST_QUESTION';
 export const POST_QUESTION_ERROR = 'POST_QUESTION_ERROR';
 export const FETCH_QUESTION = 'FETCH_QUESTION';

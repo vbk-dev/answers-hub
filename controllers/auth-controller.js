@@ -31,7 +31,7 @@ exports.registerNonGoogleUser = async (req, res, next) =>{
                 });
         }
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
     }
 }
@@ -60,7 +60,7 @@ exports.loginUser = async (req, res, next) => {
             res.status(400).json({error: 'Invalid email or password!'});
         }
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
     }
 }
@@ -92,7 +92,7 @@ exports.requestResetPassword = async (req, res, next) => {
                 });
         }
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
     }
 }
@@ -105,7 +105,7 @@ exports.authenticateUser = async (req, res, next) => {
         }
         res.json({user});
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
     }
 }

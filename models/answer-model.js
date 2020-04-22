@@ -15,6 +15,24 @@ const AnswerSchema = new mongoose.Schema({
         require: false,
         ref: 'users'
     }],
+    comments: [{
+        comment: {
+            type: String,
+            required: true,
+            minLength: 2,
+            maxLength: 128
+        },
+        postedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'users'
+        },
+        postedOn: {
+            type: Date,
+            required: true,
+            default: Date.now
+        }
+    }],
     isVerified: {
         type: Boolean,
         required: true,

@@ -1,4 +1,5 @@
 const lodash = require('lodash');
+const AnswerModel = require('../models/answer-model');
 
 exports.formatTags = str => {
     let tag = '';
@@ -17,14 +18,15 @@ exports.questionObjectFormatter = questionsList => {
     if (questionsList === null || questionsList.length < 1){
         return null;
     }
-    questionsList.map(question => {
+    questionsList.map(async question => {
         result.push({
             _id: question._id,
             title: question.title,
             dashedTitle: lodash.kebabCase(question.title),
             postedOn: question.postedOn,
             tags: question.tags,
-            postedBy: question.postedBy.firstName + ' ' + question.postedBy.lastName
+            votes: question.votes.length,
+            postedBy: question.postedBy.firstName + ' ' + question.postedBy.lastName,
         });
     });
     return result

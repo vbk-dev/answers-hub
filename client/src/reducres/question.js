@@ -1,4 +1,4 @@
-import { POST_QUESTION, FETCH_ALL_QUESTIONS, FETCH_QUESTION, FETCH_QUESTION_ERROR} from '../actions/types';
+import { POST_QUESTION, FETCH_QUESTIONS_LIST, FETCH_QUESTION, FETCH_QUESTION_ERROR} from '../actions/types';
 
 const initialState = {
     question: null,
@@ -9,8 +9,8 @@ const initialState = {
 export default function(state=initialState, action) {
     const {type, payload} = action;
     switch(type){
-        case FETCH_ALL_QUESTIONS:
-            return { ...state, questionsList: payload }
+        case FETCH_QUESTIONS_LIST:
+            return { ...state, questionsList: payload, isLoading: false }
         case POST_QUESTION:
             return state
         case FETCH_QUESTION:

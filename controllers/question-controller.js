@@ -19,7 +19,7 @@ exports.postQuestion = async (req, res, next) => {
 
         res.json({result: true});
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
     }
 }
@@ -45,7 +45,7 @@ exports.updateQuestion = async (req, res, next) => {
 
         res.json({question});
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
     }
 }
@@ -61,17 +61,18 @@ exports.deleteQuestion = async (req, res, next) => {
 
         res.json({result: 'Question deleted'});
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
     }
 }
 
 exports.fetchAllQuestions = async (req, res, next) => {
     try {
-        const questions = await QuestionModel.find().select('title postedOn tags').sort({postedOn: -1}).populate('postedBy', 'firstName lastName -_id');
-        res.json({questions: questionObjectFormatter(questions)});
+        const questions = await QuestionModel.find().sort({postedOn: -1}).populate('postedBy', 'firstName lastName -_id');
+        const result = await questionObjectFormatter(questions);
+        res.json({questions: result});
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
     }
 }
@@ -85,7 +86,24 @@ exports.fetchQuestions = async (req, res, next) => {
             res.status(200).json({error: 'Question not found'});
         }
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
+        return res.status(500).json({error: 'Something went wrong'});
+    }
+}
+
+exports.searchedQuestions = async (req, res, next) => {
+    let query = req.body.query;
+    let questions;
+    try {
+        if (!query){
+            questions = await QuestionModel.find().sort({postedOn: -1}).populate('postedBy', 'firstName lastName -_id');
+        } else {
+            questions = await QuestionModel.find({ $text: { $search: query } }).sort({postedOn: -1}).populate('postedBy', 'firstName lastName -_id');
+        }
+        const result = await questionObjectFormatter(questions);
+        res.json({questions: result});
+    } catch (error) {
+        console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
     }
 }

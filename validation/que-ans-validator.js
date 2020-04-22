@@ -8,5 +8,10 @@ exports.questionValidator = [
 ];
 
 exports.answerValidator = [
-    check('answer', 'Title is required').not().isEmpty()
+    check('answer', 'Answer is required').not().isEmpty().trim()
+];
+
+exports.commentValidator = [
+    check('comment', 'Comment is required').not().isEmpty(),
+    check('comment', 'Comment must be between 2 to 128 character').isLength({max: 128, min: 2}).trim()
 ];

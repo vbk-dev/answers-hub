@@ -9,18 +9,22 @@ exports.postAnswer = async (req, res, next) => {
             error: errors.array()
         });
     }
-    let answer = new AnswerModel({
-        answer: req.body.answer,
-        question_id: req.params.question_id,
-        postedBy: req.user_id 
-    });
-    answer = await answer.save();
-
-    const answers = await AnswerModel.find({ question_id: req.params.question_id }).sort({postedOn: -1}).populate('postedBy', 'firstName score lastName');
-    
-    res.json({
-        answers
-    });
+    try {
+        let answer = new AnswerModel({
+            answer: req.body.answer,
+            question_id: req.params.question_id,
+            postedBy: req.user_id 
+        });
+        answer = await answer.save();
+        const answers = await AnswerModel.find({ question_id: req.params.question_id }).sort({postedOn: -1}).
+            populate('postedBy', 'firstName score lastName');
+        res.json({
+            answers
+        });
+    } catch (error) {
+        console.error(error.message);
+        return res.status(500).json({error: 'Something went wrong'});   
+    }
 }
 
 exports.deleteAnswer = async (req, res, next) => {
@@ -34,18 +38,17 @@ exports.deleteAnswer = async (req, res, next) => {
 
         res.json({answers});
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
     }
 }
 
 exports.fetchAnswers = async (req, res, next) => {
     try {
-        const answers = await AnswerModel.find({question_id: req.params.question_id}).select('-question_id -__v')
-            .sort({postedOn: -1}).populate('postedBy', 'firstName score lastName');
+        const answers = await fetchAnswersList(req.params.question_id)
         res.json({answers});
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
     }
 }
@@ -69,7 +72,46 @@ exports.updateAnswer = async (req, res, next) => {
 
         res.json({answers});
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
     }
+}
+
+exports.postComment = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()){
+        return res.status(400).json({
+            error: errors.array()
+        });
+    }
+    try {
+        const answer = await AnswerModel.findById(req.params.answer_id);
+        answer.comments.unshift({
+            comment: req.body.comment,
+            postedBy: req.user_id
+        });
+        await answer.save();
+
+        const answers = await fetchAnswersList(answer.question_id);
+
+        res.json({answers});
+    } catch (error) {
+        console.error(error.message);
+        return res.status(500).json({error: 'Something went wrong'});
+    }
+}
+
+const fetchAnswersList = async question_id => {
+    return await AnswerModel.find({ question_id }).select('-question_id -__v').sort({postedOn: -1})
+        .populate([{
+            path: 'comments',
+            populate: {
+                path: "postedBy",
+                select: 'firstName score lastName'
+              }
+        },
+            {
+            path: 'postedBy', 
+            select: 'firstName score lastName'
+        }]);
 }

@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-
-import {POST_QUESTION, FETCH_ALL_QUESTIONS, FETCH_QUESTION, FETCH_QUESTION_ERROR } from './types';
+import {POST_QUESTION, FETCH_QUESTIONS_LIST, FETCH_QUESTION, FETCH_QUESTION_ERROR } from './types';
 import {setAlert} from './alert';
 
 export const postQuestion = (questionDetails, alertLoc, history) => async dispatch => {
@@ -47,7 +46,7 @@ export const fetchAllQuestions = () => async dispatch => {
     try {
         const res = await axios.get('/api/question/all');
         dispatch({
-            type: FETCH_ALL_QUESTIONS,
+            type: FETCH_QUESTIONS_LIST,
             payload: res.data.questions
         })
     } catch (error) {
@@ -80,5 +79,24 @@ export const deleteQuestion = (id, alertLoc, history) => async dispatch => {
         history.push('/');
     } catch (error) {
         dispatch(setAlert(error.response.data.error + ' Please Refresh Page', 'danger', alertLoc));
+    }
+}
+
+
+export const fetchQuestionList = searchTerm => async dispatch => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    const body = JSON.stringify({query: searchTerm});
+    try {
+        const res = await axios.post('/api/question/search', body, config);
+        dispatch({
+            type: FETCH_QUESTIONS_LIST,
+            payload: res.data.questions === null ? [] : res.data.questions
+        })  
+    } catch (error) {
+        dispatch(setAlert(error + ' Please Refresh Page', 'danger', 'INDEX'));
     }
 }

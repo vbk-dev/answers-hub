@@ -1,29 +1,33 @@
-import React, {useEffect, Fragment} from 'react';
+import React, { Fragment} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import {fetchAllQuestions} from '../../../actions/question';
 import QuestionItems from './QuestionItems';
 
-const Questions = ({questions, fetchAllQuestions}) => {
-    
-    useEffect(() => {
-        fetchAllQuestions();
-        // eslint-disable-next-line
-    }, []);
+const Questions = ({questions, isLoading}) => {
     
     return <Fragment>
-        { questions.map( question => <QuestionItems questionDetails={question} key={question._id} /> ) }
+        { questions.length > 0  ? (
+                <Fragment>
+                    { questions.map( question => <QuestionItems questionDetails={question} key={question._id} /> ) }
+                </Fragment>
+            ) : (
+                <Fragment>
+                <h4 className="text-center lead">No questions found for the searched term.</h4>
+                <p className='text-center'>Please click <Link to='/ask-question'>here</Link> to ask this question</p>
+            </Fragment>
+        ) }
     </Fragment>
 }
 
 Questions.propTypes = {
-    questions: PropTypes.array.isRequired,
-    fetchAllQuestions: PropTypes.func.isRequired
+    questions: PropTypes.array.isRequired
 }
 
 const mapStateToProps = state => ({
-    questions: state.ques.questionsList
-})
+    questions: state.ques.questionsList,
+    isLoading: state.ques.isLoading
+});
 
-export default connect(mapStateToProps, {fetchAllQuestions})(Questions);
+export default connect(mapStateToProps)(Questions);

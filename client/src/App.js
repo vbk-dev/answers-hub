@@ -2,6 +2,7 @@ import React, {Fragment, useEffect} from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 import Navbar from './components/layout/Navbar';
+import SearchBar from './components/layout/SearchBar';
 
 import Landing from './components/pages/public/Landing';
 import Login from './components/pages/auth/Login';
@@ -33,6 +34,7 @@ const App = () => {
             <Fragment>
                 <Router>
                     <Navbar />
+                    <SearchBar />
                     <Switch>
                         <Route path='/' component={Landing} exact />
                         <Route path='/registration' component={Registration} exact />

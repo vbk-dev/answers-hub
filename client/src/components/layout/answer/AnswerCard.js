@@ -13,7 +13,6 @@ const AnswerCard = ({ans, userId, deleteAnswer, questionId, alertLocation}) => {
     const {answer, postedBy, postedOn} = ans;
     const ALERT_LOCATION = ans._id + '-ANSWER_CARD';
 
-    
     return (
         <Fragment>
             <div className='answer-card'>
