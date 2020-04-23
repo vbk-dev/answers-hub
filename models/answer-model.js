@@ -10,7 +10,7 @@ const AnswerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    upLikes: [{
+    votes: [{
         type: mongoose.Types.ObjectId,
         require: false,
         ref: 'users'

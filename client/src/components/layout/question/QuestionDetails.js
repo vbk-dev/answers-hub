@@ -15,10 +15,34 @@ const QuestionDetails = ({question, isLoading, userId, dashTitle, id, history, d
 
     return (
         <Fragment>
-            {isLoading ? (<Spinner />) : 
+            {isLoading ? (
+                <div className="text-center py-5">
+                    <Spinner />
+                </div>
+                ) : 
                 (<div className="row">
-                    <div className="col-lg-12 mt-4 mb-2">
-                    { userId === question.postedBy._id && (<p className='text-right'>
+                    <div className="col-lg-12 mt-4 mb-2 question-container">
+                        <div className="vote">
+                            <div className="vote-container">
+                            <h4><strong>Votes</strong></h4>
+                                <strong className="display-4">
+                                    {question.votes.length}
+                                </strong>
+                                <div>
+                                    { false ? (
+                                        <Fragment>
+                                        <i className="far vote-icon fa-arrow-alt-circle-up" onClick={ event => { console.log('working') } }></i>
+                                        </Fragment>
+                                    ) : (
+                                        <Fragment>
+                                        <i className="fas vote-icon fa-arrow-circle-up"></i>
+                                        </Fragment>
+                                    ) }
+                                </div>
+                            </div>
+                        </div>
+                        <div className="question-details">
+                        { userId === question.postedBy._id && (<p className='text-right'>
                             <Link to={`/edit-question/${id}/${dashTitle}`} className='btn btn-dark mx-2'>Edit Question</Link>
                             <input type="button" value="Delete Question" onClick={(event) => { 
                                 deleteQuestion(question._id, 'QUESTION_DISPLAY', history); }} className='btn btn-danger mx-2' />
@@ -33,6 +57,7 @@ const QuestionDetails = ({question, isLoading, userId, dashTitle, id, history, d
                         <strong className='my-2'>Tags: </strong>{generateTagArray(question.tags).map((tagItem, ind) => <TagItem tag={tagItem} key={ind} /> )}
                         <UserTag type='Asked' firstName={question.postedBy.firstName} lastName={question.postedBy.lastName} 
                             score={question.postedBy.score} />
+                        </div>
                     </div>
                 </div>) 
             }

@@ -33,3 +33,25 @@ body{
 .tag {
     border-radius: 0.2rem;
 }
+
+.question-container{
+    display: flex;
+}
+
+.vote{
+    text-align: center;
+}
+
+.vote-container{
+    background-color: #add8e6;
+    padding: 1rem;
+    margin-right: 1rem;
+    margin-top: 1rem;
+    border-radius: 0.5rem;
+}
+
+.vote-icon{
+    margin-top: 1rem;
+    font-size: 2rem;
+    cursor: pointer;
+}

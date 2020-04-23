@@ -66,16 +66,16 @@ exports.deleteQuestion = async (req, res, next) => {
     }
 }
 
-exports.fetchAllQuestions = async (req, res, next) => {
-    try {
-        const questions = await QuestionModel.find().sort({postedOn: -1}).populate('postedBy', 'firstName lastName -_id');
-        const result = await questionObjectFormatter(questions);
-        res.json({questions: result});
-    } catch (error) {
-        console.error(error.message);
-        return res.status(500).json({error: 'Something went wrong'});
-    }
-}
+// exports.fetchAllQuestions = async (req, res, next) => {
+//     try {
+//         const questions = await QuestionModel.find().sort({postedOn: -1}).populate('postedBy', 'firstName lastName -_id');
+//         const result = await questionObjectFormatter(questions);
+//         res.json({questions: result});
+//     } catch (error) {
+//         console.error(error.message);
+//         return res.status(500).json({error: 'Something went wrong'});
+//     }
+// }
 
 exports.fetchQuestions = async (req, res, next) => {
     try {
