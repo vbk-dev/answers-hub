@@ -34,7 +34,7 @@ body{
     border-radius: 0.2rem;
 }
 
-.question-container{
+.flex-container{
     display: flex;
 }
 

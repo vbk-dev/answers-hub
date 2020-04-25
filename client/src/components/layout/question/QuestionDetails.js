@@ -6,9 +6,10 @@ import Moment from 'moment';
 
 import Spinner from '../Spinner';
 import UserTag from '../user/UserTag';
+import TagItem from './TagItem';
+import Voter from '../Voter';
 import { Link, withRouter } from 'react-router-dom';
 import { generateTagArray } from '../../../utils/formatter';
-import TagItem from './TagItem';
 import { deleteQuestion, upVote, downVote } from '../../../actions/question';
 
 const QuestionDetails = ({ question, isLoading, userId, dashTitle, id, history, deleteQuestion, upVote, downVote }) => {
@@ -36,15 +37,8 @@ const QuestionDetails = ({ question, isLoading, userId, dashTitle, id, history, 
                 ( <div className = "text-center py-5"><Spinner /></div>
                 ) : ( 
                     <div className="row">
-                        <div className="col-lg-12 mt-4 mb-2 question-container">
-                            <div className="vote">
-                                <div className="vote-container">
-                                    <i className="fas fa-thumbs-up voting-icon text-success" onClick={upVoteHandler}></i>
-                                    <h4><strong>Votes</strong></h4 >
-                                    <h1 className="display-4" ><strong>{question.votes.length}</strong></h1>
-                                    <i className="fas fa-thumbs-down voting-icon text-danger" onClick={downVoteHandler} ></i>
-                                </div>
-                            </div>
+                        <div className="col-lg-12 mt-4 mb-2 flex-container">
+                            <Voter votes={question.votes.length} upVoteHandler={upVoteHandler} downVoteHandler={downVoteHandler} />
                             <div className="question-details">
                                 {userId === question.postedBy._id && ( 
                                     <p className='text-right'>

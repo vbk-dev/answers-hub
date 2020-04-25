@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-import {POST_QUESTION, FETCH_QUESTIONS_LIST, FETCH_QUESTION, FETCH_QUESTION_ERROR, VOTE_UP, VOTE_DOWN } from './types';
+import {POST_QUESTION, FETCH_QUESTIONS_LIST, FETCH_QUESTION, FETCH_QUESTION_ERROR, VOTE_UP_QUESTION, VOTE_DOWN_QUESTION } from './types';
 import {setAlert} from './alert';
 
 export const upVote = (questionId, alertLoc) => async dispatch => {
     try {
         const res = await axios.get(`/api/vote/upvote/question/${questionId}`);
         dispatch({
-            type: VOTE_UP,
+            type: VOTE_UP_QUESTION,
             payload: res.data.question
         });
         dispatch(setAlert('Vote Added to question', 'success', alertLoc));
@@ -21,7 +21,7 @@ export const downVote = (questionId, alertLoc) => async dispatch => {
     try {
         const res = await axios.get(`/api/vote/downvote/question/${questionId}`);
         dispatch({
-            type: VOTE_DOWN,
+            type: VOTE_DOWN_QUESTION,
             payload: res.data.question
         });
         dispatch(setAlert('Vote Removed from question', 'success', alertLoc));

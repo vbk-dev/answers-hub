@@ -36,23 +36,35 @@ exports.questionDownVote = async (req, res, next) => {
     }
 }
 
-exports.questionVoter = async (req, res, next) => {
+exports.answerUpVote = async (req, res, next) => {
     try {
-        const question = await QuestionModel.findById(req.params.question_id).select('postedBy votes');
-        if (question.postedBy.toString() === req.user_id.toString()) return res.json({ error: 'Can not vote your own question' })
-        const votesArray = question.votes;
+        const answer = await AnswerModel.findById(req.params.answer_id).select('postedBy votes question_id');
         
-        const vote = votesArray.filter( voter => voter.toString() !== req.user_id.toString())
-        
-        if (vote.length === votesArray.length) {
-            votesArray.unshift(req.user_id);
-            question.votes = votesArray;
-            await question.save();
+        if (answer.votes.filter( id => id.toString() === req.user_id.toString()).length > 0){
+            res.status(401).json({ error: 'Answer already voted up!' });
         } else {
-            question.votes = vote;
-            await question.save();
+            answer.votes.unshift(req.user_id)
+            await answer.save();
+            res.json({answers: fetchAnswersList(answer.question_id)});
         }
-        res.json(question);
+    } catch (error) {
+        console.error(error.message);
+        return res.status(500).json({error: 'Something went wrong'});
+    }
+}
+
+exports.answerDownVote = async (req, res, next) => {
+    try {
+        const answer = await AnswerModel.findById(req.params.answer_id).select('postedBy votes question_id');
+        const newVotesArray = answer.votes.filter( id => id.toString() !== req.user_id.toString());
+
+        if (newVotesArray.length !== answer.votes.length){
+            answer.votes = newVotesArray;
+            await answer.save();
+            res.json({answers: fetchAnswersList(answer.question_id)});
+        } else {
+            res.status(401).json({ error: 'Answer not voted! can not unvote question' });
+        }
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
@@ -80,4 +92,19 @@ exports.answerVoter = async (req, res, next) => {
         console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
     }
+}
+
+const fetchAnswersList = async question_id => {
+    return await AnswerModel.find({ question_id }).select('-question_id -__v').sort({postedOn: -1})
+        .populate([{
+            path: 'comments',
+            populate: {
+                path: "postedBy",
+                select: 'firstName score lastName'
+              }
+        },
+            {
+            path: 'postedBy', 
+            select: 'firstName score lastName'
+        }]);
 }
