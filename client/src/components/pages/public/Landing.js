@@ -19,7 +19,7 @@ const Landing = ({ alertLocation, location, fetchQuestionList, isLoading }) => {
 
     return <div className="container my-4">
         { alertLocation === ALERT_LOCATION && <Alert /> }
-        <div className="row mb-3">
+        <div className="row">
             <div className="col-lg-12">
                 <h1 className="text-info">Recently asked questions</h1>
             </div>

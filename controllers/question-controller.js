@@ -2,7 +2,7 @@ const {validationResult} = require('express-validator');
 const lodash = require('lodash');
 
 const QuestionModel = require('../models/question-model');
-const {formatTags, questionObjectFormatter} = require('../utils/question-utils');
+const {formatTags, questionObjectFormatter, formatSearchedQuetions} = require('../utils/question-utils');
 
 exports.postQuestion = async (req, res, next) => {
     const errors = validationResult(req);
@@ -100,8 +100,7 @@ exports.searchedQuestions = async (req, res, next) => {
         } else {
             questions = await QuestionModel.find({ $text: { $search: query } }).sort({postedOn: -1}).populate('postedBy', 'firstName lastName -_id');
         }
-        const result = await questionObjectFormatter(questions);
-        res.json({questions: result});
+        await formatSearchedQuetions(questions, res);
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});

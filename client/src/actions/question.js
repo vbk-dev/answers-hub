@@ -1,7 +1,35 @@
 import axios from 'axios';
 
-import {POST_QUESTION, FETCH_QUESTIONS_LIST, FETCH_QUESTION, FETCH_QUESTION_ERROR } from './types';
+import {POST_QUESTION, FETCH_QUESTIONS_LIST, FETCH_QUESTION, FETCH_QUESTION_ERROR, VOTE_UP, VOTE_DOWN } from './types';
 import {setAlert} from './alert';
+
+export const upVote = (questionId, alertLoc) => async dispatch => {
+    try {
+        const res = await axios.get(`/api/vote/upvote/question/${questionId}`);
+        dispatch({
+            type: VOTE_UP,
+            payload: res.data.question
+        });
+        dispatch(setAlert('Vote Added to question', 'success', alertLoc));
+    } catch (error) {
+        dispatch(setAlert(error.response.data.error, 'danger', alertLoc));
+        console.log('Error: ', error.response.data);
+    }
+}
+
+export const downVote = (questionId, alertLoc) => async dispatch => {
+    try {
+        const res = await axios.get(`/api/vote/downvote/question/${questionId}`);
+        dispatch({
+            type: VOTE_DOWN,
+            payload: res.data.question
+        });
+        dispatch(setAlert('Vote Removed from question', 'success', alertLoc));
+    } catch (error) {
+        dispatch(setAlert(error.response.data.error, 'danger', alertLoc));
+        console.log('Error: ', error.response.data);
+    }
+}
 
 export const postQuestion = (questionDetails, alertLoc, history) => async dispatch => {
     const config = {

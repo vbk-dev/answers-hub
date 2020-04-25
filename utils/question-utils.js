@@ -31,3 +31,26 @@ exports.questionObjectFormatter = questionsList => {
     });
     return result
 }
+
+exports.formatSearchedQuetions = (questionList, res) => {
+    const result = [];
+    if (questionList === null || questionList.length < 1) return null;
+    try {
+        questionList.map(async question => {
+            const answers = await AnswerModel.find({question_id: question._id}).countDocuments();
+            result.push({
+                _id: question._id,
+                title: question.title,
+                dashedTitle: lodash.kebabCase(question.title),
+                postedOn: question.postedOn,
+                tags: question.tags,
+                votes: question.votes.length,
+                postedBy: question.postedBy.firstName + ' ' + question.postedBy.lastName,
+                answers: answers
+            });
+            if (questionList.length === result.length) return res.json({questions: result}); 
+        });
+    } catch (error) {
+        throw error;
+    }
+}
