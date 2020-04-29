@@ -2,7 +2,8 @@ const {validationResult} = require('express-validator');
 const lodash = require('lodash');
 
 const QuestionModel = require('../models/question-model');
-const {formatTags, questionObjectFormatter, formatSearchedQuetions} = require('../utils/question-utils');
+const UserModel = require('../models/user-model');
+const {formatTags, formatSearchedQuetions} = require('../utils/question-utils');
 
 exports.postQuestion = async (req, res, next) => {
     const errors = validationResult(req);
@@ -16,6 +17,8 @@ exports.postQuestion = async (req, res, next) => {
         question.tags = formatTags(req.body.tags);
         question.postedBy = req.user_id;
         await question.save();
+
+        await UserModel.updateOne({ _id: req.user_id }, { $inc: { score: 5 } });
 
         res.json({result: true});
     } catch (error) {
@@ -59,23 +62,14 @@ exports.deleteQuestion = async (req, res, next) => {
 
         await QuestionModel.findByIdAndRemove(questionID);
 
+        await UserModel.updateOne({ _id: req.user_id }, { $inc: { score: -5 } });
+
         res.json({result: 'Question deleted'});
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
     }
 }
-
-// exports.fetchAllQuestions = async (req, res, next) => {
-//     try {
-//         const questions = await QuestionModel.find().sort({postedOn: -1}).populate('postedBy', 'firstName lastName -_id');
-//         const result = await questionObjectFormatter(questions);
-//         res.json({questions: result});
-//     } catch (error) {
-//         console.error(error.message);
-//         return res.status(500).json({error: 'Something went wrong'});
-//     }
-// }
 
 exports.fetchQuestions = async (req, res, next) => {
     try {

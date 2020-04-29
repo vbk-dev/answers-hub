@@ -1,5 +1,6 @@
 const QuestionModel = require('../models/question-model');
 const AnswerModel = require('../models/answer-model');
+const UserModel = require('../models/user-model');
 
 exports.questionUpVote = async (req, res, next) => {
     try {
@@ -9,7 +10,9 @@ exports.questionUpVote = async (req, res, next) => {
             res.status(401).json({ error: 'Already voted up!' });
         } else {
             question.votes.unshift(req.user_id)
+            await UserModel.updateOne({ _id: question.postedBy.id }, { $inc: { score: 2 } });
             await question.save();
+            question.postedBy.score += 2; 
             res.json({question});
         }
     } catch (error) {
@@ -26,6 +29,8 @@ exports.questionDownVote = async (req, res, next) => {
         if (newVotesArray.length !== question.votes.length){
             question.votes = newVotesArray;
             await question.save();
+            await UserModel.updateOne({ _id: question.postedBy.id }, { $inc: { score: -2 } });
+            question.postedBy.score -= 2;
             res.json({question});
         } else {
             res.status(401).json({ error: 'Question not voted! can not unvote question' });
@@ -45,6 +50,7 @@ exports.answerUpVote = async (req, res, next) => {
         } else {
             answer.votes.unshift(req.user_id)
             await answer.save();
+            await UserModel.updateOne({ _id: answer.postedBy }, { $inc: { score: 2 } });
             const answers = await fetchAnswersList(answer.question_id);
             res.json({answers});
         }
@@ -62,6 +68,7 @@ exports.answerDownVote = async (req, res, next) => {
         if (newVotesArray.length !== answer.votes.length){
             answer.votes = newVotesArray;
             await answer.save();
+            await UserModel.updateOne({ _id: answer.postedBy }, { $inc: { score: -2 } });
             const answers = await fetchAnswersList(answer.question_id);
             res.json({answers});
         } else {

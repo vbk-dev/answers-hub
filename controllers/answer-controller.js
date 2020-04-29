@@ -1,6 +1,7 @@
 const {validationResult} = require('express-validator');
 
 const AnswerModel = require('../models/answer-model');
+const UserModel = require('../models/user-model');
 
 exports.postAnswer = async (req, res, next) => {
     const errors = validationResult(req);
@@ -16,8 +17,8 @@ exports.postAnswer = async (req, res, next) => {
             postedBy: req.user_id 
         });
         answer = await answer.save();
-        const answers = await AnswerModel.find({ question_id: req.params.question_id }).sort({postedOn: -1}).
-            populate('postedBy', 'firstName score lastName');
+        await UserModel.updateOne({ _id: req.user_id }, { $inc: { score: 10 } });
+        const answers = await fetchAnswersList(req.params.question_id);
         res.json({
             answers
         });
@@ -34,7 +35,8 @@ exports.deleteAnswer = async (req, res, next) => {
         if (!answer) return res.status(404).json({error: 'Answer not found'});
         if (answer.postedBy.toString() !== req.user_id.toString()) return res.status(401).json({error: 'User not authorized'});
         await AnswerModel.findByIdAndRemove(answerId);
-        const answers = await AnswerModel.find({ question_id: req.params.question_id }).sort({postedOn: -1}).populate('postedBy', 'firstName score lastName');
+        await UserModel.updateOne({ _id: req.user_id }, { $inc: { score: -10 } });
+        const answers = await fetchAnswersList(req.params.question_id);
 
         res.json({answers});
     } catch (error) {
