@@ -45,7 +45,8 @@ exports.answerUpVote = async (req, res, next) => {
         } else {
             answer.votes.unshift(req.user_id)
             await answer.save();
-            res.json({answers: fetchAnswersList(answer.question_id)});
+            const answers = await fetchAnswersList(answer.question_id);
+            res.json({answers});
         }
     } catch (error) {
         console.error(error.message);
@@ -61,33 +62,11 @@ exports.answerDownVote = async (req, res, next) => {
         if (newVotesArray.length !== answer.votes.length){
             answer.votes = newVotesArray;
             await answer.save();
-            res.json({answers: fetchAnswersList(answer.question_id)});
+            const answers = await fetchAnswersList(answer.question_id);
+            res.json({answers});
         } else {
             res.status(401).json({ error: 'Answer not voted! can not unvote question' });
         }
-    } catch (error) {
-        console.error(error.message);
-        return res.status(500).json({error: 'Something went wrong'});
-    }
-}
-
-exports.answerVoter = async (req, res, next) => {
-    try {
-        const answer = await AnswerModel.findById(req.params.answer_id).select('postedBy votes');
-        if (answer.postedBy.toString() === req.user_id.toString()) return res.json({ error: 'Can not vote your own answer' })
-        const votesArray = answer.votes;
-        
-        const vote = votesArray.filter( voter => voter.toString() !== req.user_id.toString())
-        
-        if (vote.length === votesArray.length) {
-            votesArray.unshift(req.user_id);
-            answer.votes = votesArray;
-            await answer.save();
-        } else {
-            answer.votes = vote;
-            await answer.save();
-        }
-        res.json({msg: 'done'});
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});

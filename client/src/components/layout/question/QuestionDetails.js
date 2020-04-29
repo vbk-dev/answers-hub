@@ -37,16 +37,18 @@ const QuestionDetails = ({ question, isLoading, userId, dashTitle, id, history, 
                 ( <div className = "text-center py-5"><Spinner /></div>
                 ) : ( 
                     <div className="row">
-                        <div className="col-lg-12 mt-4 mb-2 flex-container">
+                        <div className="col-lg-12 mt-4 mb-2">
+                            {userId === question.postedBy._id && ( 
+                                <p className='text-right'>
+                                    <Link to = {`/edit-question/${id}/${dashTitle}`} className = 'btn btn-dark mx-2'>Edit Question</Link>
+                                    <input type = "button" value = "Delete Question" onClick = { (event) => {
+                                        deleteQuestion(question._id, 'QUESTION_DISPLAY', history); } } className = 'btn btn-danger mx-2' / >
+                                </p>
+                            ) }
+                        </div>
+                        <div className="col-lg-12 mb-2 flex-container">
                             <Voter votes={question.votes.length} upVoteHandler={upVoteHandler} downVoteHandler={downVoteHandler} />
-                            <div className="question-details">
-                                {userId === question.postedBy._id && ( 
-                                    <p className='text-right'>
-                                        <Link to = {`/edit-question/${id}/${dashTitle}`} className = 'btn btn-dark mx-2'>Edit Question</Link>
-                                        <input type = "button" value = "Delete Question" onClick = { (event) => {
-                                            deleteQuestion(question._id, 'QUESTION_DISPLAY', history); } } className = 'btn btn-danger mx-2' / >
-                                    </p>
-                                ) } 
+                            <div className="question-details flex-right-child"> 
                                 <h2 className='text-justify'> {question.title}</h2> 
                                 <span className = "text-muted">Asked at </span>{Moment(question.postedOn).format('Do MMM YYYY, h:mm A')} 
                                 <hr />
@@ -77,8 +79,8 @@ QuestionDetails.propTypes = {
 }
 
 const mapStateToProps = state => ({
-    question: state.ques.question,
-    isLoading: state.ques.isLoading,
+    question: state.ques.question.details,
+    isLoading: state.ques.question.isLoading,
     userId: state.auth.user ? state.auth.user._id : ''
 });
 

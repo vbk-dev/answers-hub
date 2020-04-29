@@ -24,6 +24,7 @@ const AnswerForm = ({isAuthenticated, questionId, updateAnswer, alertLocation, s
             setAlert('Answer is required', 'danger', ALERT_LOCATION);
         } else {
             postAnswer(answer, questionId, ALERT_LOCATION);
+            setAnswer('');
         }
     }
 
@@ -34,6 +35,7 @@ const AnswerForm = ({isAuthenticated, questionId, updateAnswer, alertLocation, s
         } else {
             updateAnswer(answer, questionId, ansDetails._id, ansDetails._id + '-ANSWER_CARD');
             setIsEditing(false);
+            setAnswer('');
         }
     }
 

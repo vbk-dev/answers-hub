@@ -43,7 +43,7 @@ const AnswerCard = ({ans, userId, deleteAnswer, questionId, alertLocation, upVot
                 ) : (
                     <div className="flex-container">
                         <Voter votes={votes.length} upVoteHandler={upVoteHandler} downVoteHandler={downVoteHandler} />
-                        <div>
+                        <div className='flex-right-child'>
                             { userId === postedBy._id && 
                                 (<p className='text-right'>
                                     <input type="button" value="Edit" className='btn btn-dark mx-1 btn-sm'

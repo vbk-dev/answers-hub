@@ -15,7 +15,7 @@ const Landing = ({ alertLocation, location, fetchQuestionList, isLoading }) => {
         const searchedTerm = queryString.parse(location.search).search;
         fetchQuestionList(searchedTerm);
         // eslint-disable-next-line
-    }, []);
+    }, [fetchQuestionList]);
 
     return <div className="container my-4">
         { alertLocation === ALERT_LOCATION && <Alert /> }
