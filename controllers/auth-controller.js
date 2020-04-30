@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const UserModel = require('../models/user-model');
-const keys = require('../config/keys');
 const NetworkUtils = require('../utils/network-utils');
 
 exports.registerNonGoogleUser = async (req, res, next) =>{
@@ -24,7 +23,7 @@ exports.registerNonGoogleUser = async (req, res, next) =>{
             user.hashedPassword = hash;
             user = await user.save();
 
-            jwt.sign({id: user._id}, keys.JWT_SECRET, {expiresIn: 86400}, 
+            jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: 86400}, 
                 (error, token) => {
                     if (error) throw(error.message);
                     res.json({token});
@@ -49,7 +48,7 @@ exports.loginUser = async (req, res, next) => {
         if (user.googleID){
             return res.status(400).json({ error: "Login using google login!" });
         }else if (user.status === 0 && await bcrypt.compare(req.body.password, user.hashedPassword)) {
-            jwt.sign({id: user._id}, keys.JWT_SECRET, {expiresIn: 86400}, 
+            jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: 86400}, 
                 (error, token) => {
                     if (error) throw(error.message);
                     res.json({token});
@@ -79,7 +78,7 @@ exports.requestResetPassword = async (req, res, next) => {
             return res.status(400).json({ error: "Login using google login!" });
         } else {
             user.status = 1;
-            await jwt.sign({id: user._id}, keys.JWT_SECRET, {expiresIn: 86400}, 
+            await jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: 86400}, 
                 async (error, token) => {
                     if (error) throw(error.message);
                     const sections = token.toString().split('.');

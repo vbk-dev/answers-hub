@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const AnswerModel = require('./answer-model');
 
 const QuestionSchema = new mongoose.Schema({
     title: {
