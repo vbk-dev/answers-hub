@@ -34,7 +34,7 @@ exports.questionObjectFormatter = questionsList => {
 
 exports.formatSearchedQuetions = (questionList, res) => {
     const result = [];
-    if (questionList === null || questionList.length < 1) return null;
+    if (questionList === null || questionList.length < 1) return res.json({questions: null});
     try {
         questionList.map(async question => {
             const answers = await AnswerModel.find({question_id: question._id}).countDocuments();

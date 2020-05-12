@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import QuestionForm from '../../layout/question/QuestionForm';
+import QuestionForm from '../../../layout/question/QuestionForm';
 
 const AskQuestion = () => {
 

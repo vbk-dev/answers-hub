@@ -1,8 +1,8 @@
 import React, {useEffect, Fragment} from 'react';
 import {connect} from 'react-redux';
 
-import QuestionForm from '../../layout/question/QuestionForm';
-import {fetchQuestionDetails} from '../../../actions/question';
+import QuestionForm from '../../../layout/question/QuestionForm';
+import {fetchQuestionDetails} from '../../../../actions/question';
 
 const EditQuestion = ({isLoading, fetchQuestionDetails, match}) => {
     useEffect(()=>{

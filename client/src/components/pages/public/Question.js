@@ -7,6 +7,7 @@ import AnswerDetails from '../../layout/answer/AnswerDetails';
 import {fetchQuestionDetails} from '../../../actions/question';
 import {fetchAllAnswers} from '../../../actions/answer';
 import Alert from '../../layout/Alert';
+import SearchBar from '../../layout/SearchBar';
 
 const ALERT_LOCATION = 'QUESTION_DISPLAY';
 
@@ -20,7 +21,10 @@ const Question = ({fetchQuestionDetails, match, alertLocation, fetchAllAnswers})
 
     return (
         <Fragment>
-            <div className="container cus-card-container mt-4 mb-1 px-5">
+            <div className="my-3">
+                <SearchBar />
+            </div>
+            <div className="container cus-card-container mb-1 px-5">
                 {alertLocation === ALERT_LOCATION && <Alert />}
                 <QuestionDetails dashTitle={match.params.title} id={match.params.id} />
             </div>

@@ -24,4 +24,4 @@ exports.userLogin = [
 
 exports.requestResetPassword = [
     check('email', 'Email is required').isEmail().normalizeEmail()
-] 
+];

@@ -40,7 +40,7 @@ const Registration = ({setAlert, alertLocation, registerUser, isAuthenticated}) 
         <div className="container my-4">
             <div className="row">
                 <div className="col-lg-12 text-center">
-                    <h1><strong className="text-info">Answer's Hub</strong> Registration Form</h1>
+                    <h1><strong className="text-info">Answers Hub</strong> Registration Form</h1>
                 </div>
             </div>
             <div className="row">

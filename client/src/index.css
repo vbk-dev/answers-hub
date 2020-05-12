@@ -104,3 +104,21 @@ body{
 .error-box{
     border-radius: 0.5rem;
 }
+
+.error-title{
+    font-weight: 400;
+}
+
+.error-icon{
+    font-size: 10rem;
+}
+
+.profile-icon{
+    font-size: 5rem;
+    border-radius: 5rem;
+    padding: 2rem;
+    background-color: #f0f0f0;
+    border-color: black;
+    border-width: 2px;
+    border-style: groove;
+}

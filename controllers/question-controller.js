@@ -90,9 +90,9 @@ exports.searchedQuestions = async (req, res, next) => {
     let questions;
     try {
         if (!query){
-            questions = await QuestionModel.find().sort({postedOn: -1}).populate('postedBy', 'firstName lastName -_id');
+            questions = await QuestionModel.find().sort({postedOn: -1}).select('-__v -description').populate('postedBy', 'firstName lastName -_id');
         } else {
-            questions = await QuestionModel.find({ $text: { $search: query } }).sort({postedOn: -1}).populate('postedBy', 'firstName lastName -_id');
+            questions = await QuestionModel.find({ $text: { $search: query } }).sort({postedOn: -1}).select('-__v -description').populate('postedBy', 'firstName lastName -_id');
         }
         await formatSearchedQuetions(questions, res);
     } catch (error) {
