@@ -25,3 +25,14 @@ exports.userLogin = [
 exports.requestResetPassword = [
     check('email', 'Email is required').isEmail().normalizeEmail()
 ];
+
+exports.resetPassword = [
+    check('password', "Password between 6 to 32 character").isLength({ min: 6, max: 32}),
+    check('password', 'Password did not match').custom((value , {req, loc, path}) => {
+        if (value !== req.body.confirmPassword) {
+            throw new Error("Passwords don't match");
+        } else {
+            return value;
+        }
+    })
+]

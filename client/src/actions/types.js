@@ -12,6 +12,9 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGOUT = 'LOGOUT';
 export const LOAD_USER = 'LOAD_USER';
 export const AUTH_FAILED = 'AUTH_FAILED';
+export const RESET_LINK_AUTHORIZED = 'RESET_LINK_AUTHORIZED';
+export const RESET_LINK_UNAUTHORIZED = 'RESET_LINK_UNAUTHORIZED';
+export const RESET_AUTHORIZATION_TOGGLER = 'RESET_AUTHORIZATION_TOGGLER';
 
 // types constants form questions state
 export const FETCH_QUESTIONS_LIST = 'FETCH_QUESTIONS_LIST';

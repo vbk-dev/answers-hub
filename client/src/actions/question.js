@@ -70,20 +70,6 @@ export const updateQuestion = (questionDetails, questionId, alertLoc, history) =
     }
 }
 
-// export const fetchAllQuestions = () => async dispatch => {
-//     try {
-//         const res = await axios.get('/api/question/all');
-//         dispatch({
-//             type: FETCH_QUESTIONS_LIST,
-//             payload: res.data.questions
-//         })
-//     } catch (error) {
-//         dispatch(setAlert(error.response.data.error + ' Please Refresh Page', 'danger', 'INDEX'));
-//         // dispatch({
-//         //     type: POST_QUESTION_ERROR
-//         // });
-//     }
-// }
 
 export const fetchQuestionDetails = (id, dashedTitle) => async dispatch => {
     try {
@@ -96,7 +82,7 @@ export const fetchQuestionDetails = (id, dashedTitle) => async dispatch => {
         dispatch({
             type: FETCH_QUESTION_ERROR
         });
-        console.log('Error: ', error.response.data);
+        console.log('Error: ', error.response.error);
     }
 }
 
