@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, Fragment} from 'react';
 import {Link, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
@@ -6,10 +6,11 @@ import PropTypes from 'prop-types';
 import {setAlert} from '../../../actions/alert';
 import {registerUser} from '../../../actions/auth';
 import Alert from '../../layout/Alert';
+import SmallSpinner from '../../layout/SmallSpinner';
 
 const ALERT_LOCATION = 'REGISTRATION_FORM';
 
-const Registration = ({setAlert, alertLocation, registerUser, isAuthenticated}) => {
+const Registration = ({setAlert, alertLocation, registerUser, isAuthenticated, globalLoading}) => {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -56,7 +57,7 @@ const Registration = ({setAlert, alertLocation, registerUser, isAuthenticated}) 
             </div>
             { alertLocation === ALERT_LOCATION && <Alert /> }
             <div className="row">
-                <div className="col-lg-6 mx-auto">
+                <div className="col-lg-5 col-md-8 mx-auto">
                     <form onSubmit={onFormSubmithandler}>
                         <div className="form-group">
                             <label htmlFor="firstName">First Name</label>
@@ -84,7 +85,15 @@ const Registration = ({setAlert, alertLocation, registerUser, isAuthenticated}) 
                             minLength='6' maxLength='32' value={confirmPassword} onChange={onValueChangeHandler} />
                         </div>
                         <div className="form-group">
-                            <input type="submit" value="Register me" className='btn btn-info btn-block'/>
+                            {!globalLoading ? (<Fragment>
+                                <input type="submit" value="Register User" className='btn btn-info btn-block'/>
+                            </Fragment>) : (<Fragment>
+                                <button className='btn btn-info btn-block' disabled>
+                                    <SmallSpinner />{` `}
+                                    Register User
+                                </button>
+                            </Fragment>)}
+                            {/* <input type="submit" value="" className='btn btn-info btn-block'/> */}
                         </div>
                         <div className="form-group">
                             <p>Already have an account? 
@@ -107,6 +116,7 @@ Registration.propTypes = {
 
 const mapStateToProps = state => ({
     alertLocation: state.global.alertLocation,
+    globalLoading: state.global.isLoading,
     isAuthenticated: state.auth.isAuthenticated
 })
 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import {REGISTRATION_SUCCESS, LOGIN_SUCCESS, LOGOUT, LOAD_USER, AUTH_FAILED, RESET_LINK_AUTHORIZED,
-    RESET_LINK_UNAUTHORIZED, RESET_AUTHORIZATION_TOGGLER} from './types';
+    RESET_LINK_UNAUTHORIZED, RESET_AUTHORIZATION_TOGGLER, START_LOADING, END_LOADING} from './types';
 import {setAlert} from './alert';
 import setAuthToken from '../utils/set-header-token';
 
@@ -10,6 +10,7 @@ export const resetVerificationToggler = () => dispatch => {
 }
 
 export const resetPassword = (id, password, confirmPassword, history) => async dispatch => {
+    dispatch({ type: START_LOADING });
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -19,14 +20,17 @@ export const resetPassword = (id, password, confirmPassword, history) => async d
     try {
         await axios.post('/api/auth/reset-password', body, config);
         dispatch({ type: RESET_AUTHORIZATION_TOGGLER });
-        history.push('/login');
         dispatch(setAlert('Please Login with updated Password', 'success', 'LOGIN_FORM'));
+        dispatch({ type: END_LOADING });
+        history.push('/login');
     } catch (error) {
         dispatch({ type: RESET_LINK_UNAUTHORIZED });
+        dispatch({ type: END_LOADING });
     }
 }
 
 export const resetLinkVerification = (token, id) => async dispatch => {
+    dispatch({ type: START_LOADING });
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -36,14 +40,17 @@ export const resetLinkVerification = (token, id) => async dispatch => {
     try {
         await axios.post('/api/auth/verify-reset-link', body, config);
         dispatch({ type: RESET_LINK_AUTHORIZED });
+        dispatch({ type: END_LOADING });
         return true;
     } catch (error) {
         dispatch({ type: RESET_LINK_UNAUTHORIZED });
+        dispatch({ type: END_LOADING });
         return false;
     }
 }
 
 export const requestPasswrodReset = (email, alertLocation) => async dispatch => {
+    dispatch({ type: START_LOADING });
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -53,14 +60,15 @@ export const requestPasswrodReset = (email, alertLocation) => async dispatch => 
     try {
         const res = await axios.post('/api/auth/request-password-reset', body, config);
         dispatch(setAlert(res.data.message, 'success', alertLocation));
-        console.log('Success');
+        dispatch({ type: END_LOADING });
     } catch (error) {
         dispatch(setAlert(error.response.data.error, 'danger', alertLocation));
-        console.log('Failed');
+        dispatch({ type: END_LOADING });
     }
 }
 
 export const registerUser = (userDetails, alertLocation) => async dispatch => {
+    dispatch({ type: START_LOADING });
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -74,15 +82,18 @@ export const registerUser = (userDetails, alertLocation) => async dispatch => {
             payload: res.data.token
         });
         dispatch(loadUser());
+        dispatch({ type: END_LOADING });
     } catch (error) {
         dispatch(setAlert(error.response.data.error, 'danger', alertLocation));
         dispatch({
             type: AUTH_FAILED
         });
+        dispatch({ type: END_LOADING });
     }
 }
 
 export const loginUser = (userDetails, alertLocation) => async dispatch => {
+    dispatch({ type: START_LOADING });
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -96,11 +107,13 @@ export const loginUser = (userDetails, alertLocation) => async dispatch => {
             payload: res.data.token
         });
         dispatch(loadUser());
+        dispatch({ type: END_LOADING });
     } catch (error) {
         dispatch(setAlert(error.response.data.error, 'danger', alertLocation));
         dispatch({
             type: AUTH_FAILED
         });
+        dispatch({ type: END_LOADING });
     }
 }
 

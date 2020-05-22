@@ -1,14 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, Fragment} from 'react';
 import {Link, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {loginUser} from '../../../actions/auth';
 import Alert from '../../layout/Alert';
+import SmallSpinner from '../../layout/SmallSpinner';
 
 const ALERT_LOCATION = 'LOGIN_FORM';
 
-const Login = ({ alertLocation, loginUser, isAuthenticated}) => {
+const Login = ({ alertLocation, loginUser, isAuthenticated, globalLoading}) => {
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -21,7 +22,7 @@ const Login = ({ alertLocation, loginUser, isAuthenticated}) => {
     const onFormSubmithandler = event => {
         event.preventDefault();
         console.log(formData);
-        loginUser(formData, ALERT_LOCATION)
+        loginUser(formData, ALERT_LOCATION);
     }
     
     if (isAuthenticated) {
@@ -66,7 +67,14 @@ const Login = ({ alertLocation, loginUser, isAuthenticated}) => {
                             </p>
                         </div>
                         <div className="form-group">
-                            <input type="submit" value="Login" className='btn btn-info btn-block'/>
+                            {!globalLoading ? (<Fragment>
+                                    <input type="submit" value="Login" className='btn btn-info btn-block'/>
+                                </Fragment>) : (<Fragment>
+                                    <button className='btn btn-info btn-block' disabled>
+                                        <SmallSpinner />{` `}
+                                        Login
+                                    </button>
+                                </Fragment>)}
                         </div>
                         <div className="form-group">
                             <p>Don't have an account? 
@@ -88,6 +96,7 @@ Login.propTypes = {
 
 const mapStateToProps = state => ({
     alertLocation: state.global.alertLocation,
+    globalLoading: state.global.isLoading,
     isAuthenticated: state.auth.isAuthenticated
 })
 

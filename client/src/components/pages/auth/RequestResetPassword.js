@@ -1,13 +1,14 @@
-import React, {useState} from 'react';
+import React, {useState, Fragment} from 'react';
 import {Link, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 
 import {requestPasswrodReset} from '../../../actions/auth';
 import Alert from '../../layout/Alert';
+import SmallSpinner from '../../layout/SmallSpinner';
 
 const ALERT_LOCATION = 'PASSWORD_REQUEST'
 
-const RequestResetPassword = ({requestPasswrodReset, isAuthenticated, alertLocation}) => {
+const RequestResetPassword = ({requestPasswrodReset, isAuthenticated, alertLocation, globalLoading}) => {
     const [email, setEmail] = useState('');
 
     const onSubmitHander = event => {
@@ -46,7 +47,14 @@ const RequestResetPassword = ({requestPasswrodReset, isAuthenticated, alertLocat
                             </p>
                         </div>
                         <div className="form-group">
-                            <input type="submit" value="Reset password" className='btn btn-info btn-block'/>
+                            {!globalLoading ? (<Fragment>
+                                    <input type="submit" value="Reset Password" className='btn btn-info btn-block'/>
+                                </Fragment>) : (<Fragment>
+                                    <button className='btn btn-info btn-block' disabled>
+                                        <SmallSpinner />{` `}
+                                        Reset Password
+                                    </button>
+                                </Fragment>)}
                         </div>
                         <div className="form-group">
                             <p>Don't have an account? 
@@ -62,6 +70,7 @@ const RequestResetPassword = ({requestPasswrodReset, isAuthenticated, alertLocat
 
 const mapStateToProps = state => ({
     alertLocation: state.global.alertLocation,
+    globalLoading: state.global.isLoading,
     isAuthenticated: state.auth.isAuthenticated
 })
 
