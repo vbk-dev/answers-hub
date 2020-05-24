@@ -1,19 +1,22 @@
 const router = require('express').Router();
 
-const authController = require('../controllers/auth-controller');
-const authValidator = require('../validation/auth-validator');
+const {registration, login, requestResetPassword, verigyResetLink, resetPassword, 
+            authenticateUser} = require('../controllers/auth-controller');
+const {registrationValidation, loginValidation, resetRequestValidation, 
+            resetPasswordValidation} = require('../validation/auth-validator');
+const {ValidationsResult} = require('../validation');
 const authenticator = require('../middleware/auth-user');
 
-router.post('/register-user', authValidator.userRegistration, authController.registerNonGoogleUser);
+router.post('/register-user', registrationValidation, ValidationsResult, registration);
 
-router.post('/login-user', authValidator.userLogin, authController.loginUser);
+router.post('/login-user', loginValidation, ValidationsResult, login);
 
-router.post('/request-password-reset', authValidator.requestResetPassword, authController.requestResetPassword);
+router.post('/request-password-reset', resetRequestValidation, ValidationsResult, requestResetPassword);
 
-router.post('/verify-reset-link', authController.verigyResetLink);
+router.post('/verify-reset-link', verigyResetLink);
 
-router.post('/reset-password', authValidator.resetPassword, authController.resetPassword);
+router.post('/reset-password', resetPasswordValidation, ValidationsResult, resetPassword);
 
-router.get('/', authenticator, authController.authenticateUser)
+router.get('/', authenticator, authenticateUser)
 
 module.exports = router;

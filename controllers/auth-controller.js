@@ -1,4 +1,3 @@
-const {validationResult} = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {v4: uuidv4} = require('uuid');
@@ -6,59 +5,44 @@ const {v4: uuidv4} = require('uuid');
 const UserModel = require('../models/user-model');
 const {sendEmail} = require('../utils/network-utils');
 
-exports.registerNonGoogleUser = async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()){
-        return res.status(400).json({
-            error: errors.array()
-        });
-    }
-
+exports.registration = async (req, res, next) => {
+    const {email, password} = req.body;
     try {
-        let user = await UserModel.findOne({email: req.body.email});
-        if (user) {
-            return res.status(400).json({error: 'Email already registered'});
-        } else {
-            const hash = await bcrypt.hash(req.body.password, 12);
-            user = new UserModel(req.body);
-            user.hashedPassword = hash;
-            user = await user.save();
+        let user = await UserModel.findOne({email});
 
-            jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: 86400}, 
-                (error, token) => {
-                    if (error) throw(error.message);
-                    res.json({token});
-                });
-        }
+        if (user) return res.status(400).json({error: 'Email already registered'}); 
+        
+        user = new UserModel(req.body);
+        user.hashedPassword = await bcrypt.hash(password, 12);
+        
+        user = await user.save();
+        
+        jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: 86400}, 
+            (error, token) => {
+                if (error) throw(error.message);
+                res.json({token});
+        });
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
     }
-}
+} 
 
-exports.loginUser = async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()){
-        return res.status(400).json({
-            error: errors.array()
-        });
-    }
+exports.login = async (req, res, next) => {
+    const {email, password} = req.body;
     try {
-        const user = await UserModel.findOne({ email: req.body.email }).select('googleID hashedPassword status');
+        const user = await UserModel.findOne({ email }).select('googleID hashedPassword status');
 
-        if (user.googleID){
-            return res.status(400).json({ error: "Login using google login!" });
-        }else if (user.status === 0 && await bcrypt.compare(req.body.password, user.hashedPassword)) {
-            jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: 86400}, 
-                (error, token) => {
-                    if (error) throw(error.message);
-                    res.json({token});
-                });
-        } else if (user.status === 1) {
-            res.status(400).json({error: 'Password reset link sent on email!'})
-        } else {
-            res.status(400).json({error: 'Invalid email or password!'});
-        }
+        if (!user) return res.status(400).json({error: 'Invalid email or password!'});
+        if (user.googleID) return res.status(400).json({ error: 'Login using google login!' });
+        if (user.status === 1) return res.status(400).json({error: 'Password reset link sent on email!'});
+        if (!(user.status === 0 && await bcrypt.compare(req.body.password, user.hashedPassword))) return res.status(400).json({error: 'Invalid email or password!'});
+
+        jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: 86400}, 
+            (error, token) => {
+                if (error) throw(error.message);
+                res.json({token});
+        });
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({error: 'Something went wrong'});
@@ -66,14 +50,8 @@ exports.loginUser = async (req, res, next) => {
 }
 
 exports.requestResetPassword = async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()){
-        return res.status(400).json({
-            error: errors.array()
-        });
-    }
+    const {email} = req.body;
     try {
-        const {email} = req.body;
         const user = await UserModel.findOne({ email }).select('googleID status resetToken');
 
         if (!user) return res.status(400).json({error: 'Email not registered please register'});
@@ -100,9 +78,7 @@ exports.requestResetPassword = async (req, res, next) => {
 exports.authenticateUser = async (req, res, next) => {
     try {
         const user = await UserModel.findById(req.user_id).select('firstName lastName email joinedOn score authorityLevel');
-        if (!user) {
-            return res.status(400).json({error: 'User Not Found'});
-        }
+        if (!user) return res.status(400).json({error: 'User Not Found'});
         res.json({user});
     } catch (error) {
         console.error(error.message);
@@ -127,17 +103,9 @@ exports.verigyResetLink = async (req, res, next) => {
 }
 
 exports.resetPassword = async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()){
-        return res.status(400).json({
-            error: errors.array()
-        });
-    }
-
     const {id, password} = req.body;
-
+    
     try {
-
         const user = await UserModel.findById(id).select('status resetToken hashedPassword');
 
         if (!user) return res.status(400).json({error: 'user not Unauthorized'});
