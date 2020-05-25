@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
-const SearchBar = () => {
-    const [search, setSearch] = useState('');
+const SearchBar = ({searchedTerm}) => {
+    const [search, setSearch] = useState(searchedTerm !== null? searchedTerm: '');
 
     return (
         <div className="container">

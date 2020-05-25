@@ -4,13 +4,15 @@ import {connect} from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import QuestionItems from './QuestionItems';
+import QuestionLoader from './QuestionLoader';
 
-const Questions = ({questions, isLoading}) => {
+const Questions = ({questions, search}) => {
     
     return <Fragment>
         { questions.length > 0  ? (
                 <Fragment>
                     { questions.map( question => <QuestionItems questionDetails={question} key={question._id} /> ) }
+                    <QuestionLoader search={search} />
                 </Fragment>
             ) : (
                 <Fragment>
@@ -27,7 +29,6 @@ Questions.propTypes = {
 
 const mapStateToProps = state => ({
     questions: state.ques.questionsList,
-    isLoading: state.ques.isLoading
 });
 
 export default connect(mapStateToProps)(Questions);

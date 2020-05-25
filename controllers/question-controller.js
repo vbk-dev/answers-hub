@@ -5,13 +5,9 @@ const QuestionModel = require('../models/question-model');
 const UserModel = require('../models/user-model');
 const {formatTags, formatSearchedQuetions} = require('../utils/question-utils');
 
+const NO_QUESTION_PER_PAGE = 10;
+
 exports.postQuestion = async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()){
-        return res.status(400).json({
-            error: errors.array()[0].msg
-        });
-    }
     try {
         let question = new QuestionModel(req.body);
         question.tags = formatTags(req.body.tags);
@@ -86,13 +82,15 @@ exports.fetchQuestions = async (req, res, next) => {
 }
 
 exports.searchedQuestions = async (req, res, next) => {
-    let query = req.body.query;
+    const {query, page} = req.body; 
     let questions;
     try {
         if (!query){
-            questions = await QuestionModel.find().sort({postedOn: -1}).select('-__v -description').populate('postedBy', 'firstName lastName -_id');
+            questions = await QuestionModel.find().skip((page-1) * NO_QUESTION_PER_PAGE).limit(NO_QUESTION_PER_PAGE)
+                .sort({postedOn: -1}).select('-__v -description').populate('postedBy', 'firstName lastName -_id');
         } else {
-            questions = await QuestionModel.find({ $text: { $search: query } }).sort({postedOn: -1}).select('-__v -description').populate('postedBy', 'firstName lastName -_id');
+            questions = await QuestionModel.find({ $text: { $search: query } }).skip(page-1).limit(NO_QUESTION_PER_PAGE)
+                .sort({postedOn: -1}).select('-__v -description').populate('postedBy', 'firstName lastName -_id');
         }
         await formatSearchedQuetions(questions, res);
     } catch (error) {

@@ -7,10 +7,11 @@ import { Link, Redirect, withRouter } from 'react-router-dom';
 import {setAlert} from '../../../actions/alert';
 import {updateQuestion, postQuestion} from '../../../actions/question';
 import Alert from '../Alert';
+import SmallSpinner from '../SmallSpinner';
 
 const ALERT_LOCATION = 'QUESTION_FORM';
 
-const QuestionForm = ({setAlert, alertLocation, type, question, authUser, dashedTitle, history, updateQuestion, postQuestion}) => {
+const QuestionForm = ({setAlert, alertLocation, type, question, authUser, dashedTitle, history, updateQuestion, postQuestion, globalLoading}) => {
     const [formData, setFormData] = useState({
         title: type === 'EDIT' ? question.title: '',
         description: type === 'EDIT' ? question.description: '',
@@ -110,11 +111,27 @@ const QuestionForm = ({setAlert, alertLocation, type, question, authUser, dashed
                     <div className="col-lg-12 text-center">
                         {type === 'EDIT' ? (
                             <Fragment>
-                                <input type="submit" value="update Question" className='btn btn-success mx-2' />
-                                <Link className='btn btn-danger mx-2' to={`/question/${question._id}/${dashedTitle}`}>Cancel Update</Link>
+                                {!globalLoading ? (<Fragment>
+                                    <input type="submit" value="update Question" className='btn btn-success mx-2' />
+                                    <Link className='btn btn-danger mx-2' to={`/question/${question._id}/${dashedTitle}`}>Cancel Update</Link>
+                                </Fragment>) : (<Fragment>
+                                    <button className='btn btn-info btn-block' disabled>
+                                        <SmallSpinner />{` `}
+                                        updating Question
+                                    </button>
+                                </Fragment>)}
                             </Fragment>
                         ) : (
-                            <input type="submit" value="Post Your Question" className='btn btn-info btn-block' />
+                            <Fragment>
+                                {!globalLoading ? (<Fragment>
+                                    <input type="submit" value="Post Your Question" className='btn btn-info btn-block' />
+                                </Fragment>) : (<Fragment>
+                                    <button className='btn btn-info btn-block' disabled>
+                                        <SmallSpinner />{` `}
+                                        Posting Your Question
+                                    </button>
+                                </Fragment>)}
+                            </Fragment>
                         )}
                     </div>
                 </div>
@@ -125,6 +142,7 @@ const QuestionForm = ({setAlert, alertLocation, type, question, authUser, dashed
 
 const mapStateToProps = state => ({
     alertLocation: state.global.alertLocation,
+    globalLoading: state.global.isLoading,
     question: state.ques.question,
     authUser: state.auth.user._id
 });

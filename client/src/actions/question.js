@@ -1,7 +1,34 @@
 import axios from 'axios';
 
-import {POST_QUESTION, FETCH_QUESTIONS_LIST, FETCH_QUESTION, FETCH_QUESTION_ERROR, VOTE_UP_QUESTION, VOTE_DOWN_QUESTION } from './types';
+import {POST_QUESTION, FETCH_QUESTIONS_LIST, FETCH_QUESTION, FETCH_QUESTION_ERROR, VOTE_UP_QUESTION, VOTE_DOWN_QUESTION,
+        START_LOADING, END_LOADING, NO_QUESTION_TO_LOAD, APPEND_QUESTIONS } from './types';
 import {setAlert} from './alert';
+
+export const loadQuestions = (searchTerm, page) => async dispatch => {
+    dispatch({type: START_LOADING});
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    const body = JSON.stringify({query: searchTerm, page});
+    try {
+        const res = await axios.post('/api/question/search', body, config);
+        const questions = res.data.questions;
+        
+        if (!questions) {
+            dispatch({type: NO_QUESTION_TO_LOAD});
+            return dispatch({type: END_LOADING}); 
+        }
+
+        dispatch({type: APPEND_QUESTIONS, payload: questions});
+        console.log({questions});
+        dispatch({type: END_LOADING});
+    } catch (error) {
+        dispatch(setAlert(error.response.data.error + ' Please Refresh Page', 'danger', 'INDEX'));
+        dispatch({type: END_LOADING});
+    }
+}
 
 export const upVote = (questionId, alertLoc) => async dispatch => {
     try {
@@ -32,6 +59,7 @@ export const downVote = (questionId, alertLoc) => async dispatch => {
 }
 
 export const postQuestion = (questionDetails, alertLoc, history) => async dispatch => {
+    dispatch({type: START_LOADING});
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -45,12 +73,15 @@ export const postQuestion = (questionDetails, alertLoc, history) => async dispat
         });
         history.push('/');
         dispatch(setAlert('Your question posted Successfully', 'success', 'INDEX'));
+        dispatch({type: END_LOADING});
     } catch (error) {
         dispatch(setAlert(error.response.data.error, 'danger', alertLoc));
+        dispatch({type: END_LOADING});
     }
 }
 
 export const updateQuestion = (questionDetails, questionId, alertLoc, history) => async dispatch => {
+    dispatch({type: START_LOADING});
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -65,8 +96,10 @@ export const updateQuestion = (questionDetails, questionId, alertLoc, history) =
         });
         history.push('/');
         dispatch(setAlert('Question Updated Successfully', 'success', 'INDEX'));
+        dispatch({type: END_LOADING});
     } catch (error) {
         dispatch(setAlert(error.response.data.error, 'danger', alertLoc));
+        dispatch({type: END_LOADING});
     }
 }
 
@@ -96,14 +129,13 @@ export const deleteQuestion = (id, alertLoc, history) => async dispatch => {
     }
 }
 
-
-export const fetchQuestionList = searchTerm => async dispatch => {
+export const fetchQuestionList = (searchTerm, page=1) => async dispatch => {
     const config = {
         headers: {
             'Content-Type': 'application/json'
         }
     };
-    const body = JSON.stringify({query: searchTerm});
+    const body = JSON.stringify({query: searchTerm, page});
     try {
         const res = await axios.post('/api/question/search', body, config);
         dispatch({
@@ -111,6 +143,6 @@ export const fetchQuestionList = searchTerm => async dispatch => {
             payload: res.data.questions === null ? [] : res.data.questions
         })  
     } catch (error) {
-        dispatch(setAlert(error + ' Please Refresh Page', 'danger', 'INDEX'));
+        dispatch(setAlert(error.response.data.error + ' Please Refresh Page', 'danger', 'INDEX'));
     }
 }

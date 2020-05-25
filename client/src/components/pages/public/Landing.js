@@ -12,15 +12,16 @@ import Spinner from '../../layout/Spinner';
 const ALERT_LOCATION = 'INDEX';
 
 const Landing = ({ alertLocation, location, fetchQuestionList, isLoading }) => {
+    let searchedTerm;
 
     useEffect(() => {
-        const searchedTerm = queryString.parse(location.search).search;
+        searchedTerm = queryString.parse(location.search).search;
         fetchQuestionList(searchedTerm);
         // eslint-disable-next-line
     }, [fetchQuestionList]);
 
     return <div className="container my-4">
-        <SearchBar />
+        <SearchBar searchedTerm={searchedTerm} />
         { alertLocation === ALERT_LOCATION && <Alert /> }
         <div className="row">
             <div className="col-lg-12 mt-2">
@@ -29,7 +30,7 @@ const Landing = ({ alertLocation, location, fetchQuestionList, isLoading }) => {
         </div>
         <div className="row">
             <div className="col-lg-9">
-                { isLoading ? (<div className = "text-center py-5"><Spinner /></div>) : (<Questions />) }
+                { isLoading ? (<div className = "text-center py-5"><Spinner /></div>) : (<Questions search={searchedTerm} />) }
             </div>
             <div className="col-lg-3">
                 <div className="card my-2">

@@ -93,7 +93,6 @@ const Registration = ({setAlert, alertLocation, registerUser, isAuthenticated, g
                                     Register User
                                 </button>
                             </Fragment>)}
-                            {/* <input type="submit" value="" className='btn btn-info btn-block'/> */}
                         </div>
                         <div className="form-group">
                             <p>Already have an account? 
