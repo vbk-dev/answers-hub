@@ -22,7 +22,7 @@ export default function(state=initialState, action) {
         case FETCH_QUESTION:
         case VOTE_UP_QUESTION:
         case VOTE_DOWN_QUESTION:
-            return { ...state, questionsList: [], isLoading: true, question: { isLoading: false, details: payload } };
+            return { ...state, questionsList: [], isLoading: false, question: { isLoading: false, details: payload } };
         case FETCH_QUESTION_ERROR:
             return { ...state, questionsList: [], isLoading: false, question: { isLoading: true, details: payload } };
         case NO_QUESTION_TO_LOAD:

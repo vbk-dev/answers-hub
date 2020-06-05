@@ -1,4 +1,4 @@
-import React, {useState, Fragment } from 'react';
+import React, {useState, Fragment, useEffect} from 'react';
 import {connect} from 'react-redux'; 
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -17,6 +17,10 @@ const QuestionForm = ({setAlert, alertLocation, type, question, authUser, dashed
         description: type === 'EDIT' ? question.description: '',
         tags: type === 'EDIT' ? question.tags: ''
     });
+
+    useEffect(()=> {
+        console.log({alertLocation, globalLoading, question, authUser});
+    }, []);
 
     const { title, description, tags } = formData;
 
@@ -143,7 +147,7 @@ const QuestionForm = ({setAlert, alertLocation, type, question, authUser, dashed
 const mapStateToProps = state => ({
     alertLocation: state.global.alertLocation,
     globalLoading: state.global.isLoading,
-    question: state.ques.question,
+    question: state.ques.question.details,
     authUser: state.auth.user._id
 });
 
