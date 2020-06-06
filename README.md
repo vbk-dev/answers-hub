@@ -16,32 +16,32 @@ All need is NodeJS and npm installed on your machine. You can download nodejs fr
 
 1. Add a .env file in the root folder with the following
 ```
-    MONGO_URI=<your mongodb uri with credentials>
-    JWT_SECRET=<your secret for Json Web Token>
-    SMTP_HOST=<your SMTP host>
-    SMTP_PORT=<your SMTP port>
-    SMTP_USER=<your SMTP user name>
-    SMTP_PASSWORD=<your SMTP password>
+MONGO_URI=<your mongodb uri with credentials>
+JWT_SECRET=<your secret for Json Web Token>
+SMTP_HOST=<your SMTP host>
+SMTP_PORT=<your SMTP port>
+SMTP_USER=<your SMTP user name>
+SMTP_PASSWORD=<your SMTP password>
 ``` 
 
 
 2. Install server dependencies
 
 ```bash
-    npm install
+npm install
 ```
 
 3. Install client dependencies
 
 ```bash
-    cd client
-    npm install
+cd client
+npm install
 ```
 
 4. Run both Express & React from root folder
 
 ```bash
-    npm run dev
+npm run dev
 ```
 
 ---
