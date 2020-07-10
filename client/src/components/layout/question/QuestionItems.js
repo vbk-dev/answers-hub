@@ -25,7 +25,7 @@ const QuestionItems = ({ questionDetails }) => {
             <div className='ques-right'>
                 <h4><Link to={`/question/${_id}/${dashedTitle}`}>{title}</Link></h4>
                 <p>{generateTagArray(tags).map((tagItem, ind) => <TagItem tag={tagItem} key={ind} /> )}</p>
-                <p>Asked by {postedBy} at {Moment(postedOn).format('Do MMM YYYY, h:mm A')}</p>
+                <p className='mt-2' >Asked by {postedBy} at {Moment(postedOn).format('Do MMM YYYY, h:mm A')}</p>
             </div>
         </div>
     );
