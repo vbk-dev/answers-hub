@@ -2,7 +2,7 @@
 
 > QnA Web Application for everyone
 
-[Answer's Hub](https://answers-hub.herokuapp.com/ "Answer's Hub") is a Question and Answers web application that is developed using NodeJS, ReactJS with Redux and MongoDB. Users having question can post their question using this web application and other users can answer their questions. 
+[Answer's Hub](https://answershub.herokuapp.com/ "Answer's Hub") is a Question and Answers web application that is developed using NodeJS, ReactJS with Redux and MongoDB. Users having question can post their question using this web application and other users can answer their questions. 
 
 ---
 
@@ -82,4 +82,4 @@ npm run dev
 
 ### Project Live link
 
-[Answer's Hub](https://answers-hub.herokuapp.com/ "Answer's Hub")
+[Answer's Hub](https://answershub.herokuapp.com/ "Answer's Hub")
